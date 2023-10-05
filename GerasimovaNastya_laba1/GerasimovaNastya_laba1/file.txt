@@ -1,0 +1,9 @@
+Name pipe: reg
+Length: 5
+Diameter: 35
+In repairs: 1
+
+Name CS: vrt
+Number workshop: 543
+Number workshop in job: 54
+Performance: 34

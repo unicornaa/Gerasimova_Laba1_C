@@ -38,7 +38,7 @@ void Load(Pipe& p, CompressorStation& cs) {
     ifstream fin;
     fin.open("file.txt", ios::in);
 
-    if (fin.is_open())
+    if (fin.is_open() || (p.namePipe == "" && cs.nameCompressorStation == ""))
     {
         fin >> p.namePipe;
         fin >> p.length;
@@ -161,19 +161,28 @@ void EditPipe(Pipe& p) {
     p.InRepairs = !p.InRepairs;
 }
 
+bool InputBool() {
+    bool state;
+    while (!(cin >> state)) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Try again: ";
+    }
+    return state;
+}
 
-//void EditCS(CompressorStation& cs) {
-//    cout << " Start one workshop - ' 1', stop - '0': " << endl;
-//    bool sign = numberWorkshopJob();
-//    if (sign == 1) {
-//        if () cout << "all workshops are working" << endl;
-//        else ++;
-//    }
-//    else {
-//        if () cout << "all workshops are sopped" << endl;
-//        else cs. --;
-//    }
-//}
+void EditCS(CompressorStation& cs) {
+    cout << " Start one workshop - ' 1', stop - '0': " << endl;
+    bool sign = InputBool();
+    if (sign == 1) {
+        if (cs.numberWorkshopJob == cs.numberWorkshop) cout << "all workshops are working" << endl;
+        else cs.numberWorkshopJob++;
+    }
+    else {
+        if (cs.numberWorkshopJob == 0) cout << "all workshops are sopped" << endl;
+        else cs.numberWorkshopJob--;
+    }
+}
 
 int main()
 {
@@ -208,7 +217,7 @@ int main()
         }
         case 5:
         {
-            //EditCS(station);
+            EditCS(station);
             break;
         }
         case 6:

@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-#include <windows.h>
+//#include <windows.h>
 using namespace std;
 
 template <typename T>
@@ -64,21 +64,61 @@ void Load(Pipe& p, CompressorStation& cs) {
 }
 
 //запись в файл
-void Save(const Pipe& p, const CompressorStation& cs) {
+//void Save(const Pipe& p, const CompressorStation& cs) {
+//    ofstream fout;
+//    fout.open("file.txt", ios::out);
+//    if (p.namePipe == "" || cs.nameCompressorStation == "") cout << "Enter data " << endl;
+//    else{
+//        if (fout.is_open())
+//        {
+//            fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+//            fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
+//            fout.close();
+//        }
+//    }
+//    
+//}
+
+
+void SavePipe(const Pipe& p) {
     ofstream fout;
-    fout.open("file.txt", ios::out);
-    if (p.namePipe == "" || cs.nameCompressorStation == "") cout << "Enter data " << endl;
-    else{
-        if (fout.is_open())
-        {
-            fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
-            fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
-            fout.close();
-        }
+    fout.open("file.txt", ios::app);
+
+    if (fout.is_open())
+    {
+        fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+        fout.close();
     }
-    
+        
+
 }
 
+void SaveCS(const CompressorStation& cs) {
+    ofstream fout;
+    fout.open("file.txt", ios::out);
+    if (fout.is_open())
+    {
+        fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
+        fout.close();
+    }
+
+}
+
+void SaveAll(const Pipe& p, const CompressorStation& cs) {
+    if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
+    else {
+        if( p.namePipe == ""){
+            SaveCS(cs);
+        }
+        else if (cs.nameCompressorStation == "") {
+            SavePipe(p);
+        }
+        else {
+            SavePipe(p);
+            SaveCS(cs);
+        }
+    }
+}
 
 void PrintMenu() {
     cout << "1. Add Pipe " << endl
@@ -237,7 +277,7 @@ int main()
         }
         case 6:
         {
-            Save(pipe1, station);
+            SaveAll(pipe1, station);
             break;
         }
         case 7:

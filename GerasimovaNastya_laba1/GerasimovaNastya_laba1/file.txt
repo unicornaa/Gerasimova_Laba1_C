@@ -1,0 +1,9 @@
+Name pipe: 34
+Length: 32
+Diameter: 23
+In repairs: 1
+
+Name CS: 432
+Number workshop: 43
+Number workshop in job: 32
+Performance: 32

@@ -35,33 +35,48 @@ struct CompressorStation {
 
 //считывание из файла
 void Load(Pipe& p, CompressorStation& cs) {
-    ifstream fin;
-    fin.open("file.txt", ios::in);
 
-    if (fin.is_open() || (p.namePipe == "" && cs.nameCompressorStation == ""))
+    ifstream fin;
+    fin.open("file1.txt", ios::in);
+    
+    if (fin.is_open())
     {
         fin >> p.namePipe;
-        fin >> p.length;
-        fin >> p.diameter;
-        fin >> p.InRepairs;
-        fin >> cs.nameCompressorStation;
-        fin >> cs.numberWorkshop;
-        fin >> cs.numberWorkshopJob;
-        fin >> cs.performance;
-        fin.close();
+        if (p.namePipe != "") {
+            fin >> p.length;
+            fin >> p.diameter;
+            fin >> p.InRepairs;
+            fin >> cs.nameCompressorStation;
+            fin >> cs.numberWorkshop;
+            fin >> cs.numberWorkshopJob;
+            fin >> cs.performance;
+            fin.close();
+        }
+        else {
+            cout << "Save data in file" << endl;
+        }
+        
     }
+    else {
+        cout << "Error" << endl;
+    }
+
 }
 
 //запись в файл
 void Save(const Pipe& p, const CompressorStation& cs) {
     ofstream fout;
     fout.open("file.txt", ios::out);
-    if (fout.is_open())
-    {
-        fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
-        fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
-        fout.close();
+    if (p.namePipe == "" || cs.nameCompressorStation == "") cout << "Enter data " << endl;
+    else{
+        if (fout.is_open())
+        {
+            fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+            fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
+            fout.close();
+        }
     }
+    
 }
 
 

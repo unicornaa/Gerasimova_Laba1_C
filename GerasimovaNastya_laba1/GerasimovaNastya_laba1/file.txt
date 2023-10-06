@@ -1,5 +1,0 @@
-Name pipe: 43
-Length: 34
-Diameter: 34
-In repairs: 1
-

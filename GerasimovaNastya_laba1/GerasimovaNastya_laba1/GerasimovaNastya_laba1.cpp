@@ -11,7 +11,7 @@ T GetCorrectNumber(T min, T max ) {
     {
         cin.clear();//сбрасываем биты ошибок и буфер
         cin.ignore(1000000, '\n');//сбрасываем до какого-то символа
-        cout << "Type again" << min << "-" << max << ":";
+        cout << "Type again " << min << "-" << max << ":";
     }
     return x;
 }
@@ -32,79 +32,34 @@ struct CompressorStation {
 };
 
 //считывание из файла
-void LoadPipe(Pipe& p) {
+void Load(Pipe& p, CompressorStation& cs) {
 
     ifstream fin;
-    string f;
-    bool flag = 0;
-    fin.open("file.txt", ios::in);
-    
+    fin.open("file1.txt", ios::in);
+
     if (fin.is_open())
     {
-        while (!fin.eof()) {
-            fin >> f;
-            if (f == "Name pipe: ") {
-                fin >> p.namePipe;
-                fin >> p.length;
-                fin >> p.diameter;
-                fin >> p.InRepairs;
-                fin.close();
-                flag = 1;
-                break;
-            }
+        fin >> p.namePipe;
+        if (p.namePipe != "") {
+            fin >> p.length;
+            fin >> p.diameter;
+            fin >> p.InRepairs;
+            fin >> cs.nameCompressorStation;
+            fin >> cs.numberWorkshop;
+            fin >> cs.numberWorkshopJob;
+            fin >> cs.performance;
+            fin.close();
         }
-        if (!flag) cout << "Save data Pipe in file" << endl;
+        else {
+            cout << "Save data in file" << endl;
+        }
+
     }
     else {
         cout << "Error" << endl;
     }
 
 }
-
-void LoadCS(CompressorStation& cs) {
-
-    ifstream fin;
-    string f;
-    bool flag = 0;
-    fin.open("file.txt", ios::in);
-
-    if (fin.is_open())
-    {
-        while (!fin.eof()) {
-            fin >> f;
-            if (f == "Name CS: ") {
-                fin >> cs.nameCompressorStation;
-                fin >> cs.numberWorkshop;
-                fin >> cs.numberWorkshopJob;
-                fin >> cs.performance;
-                fin.close();
-                flag = 1;
-                break;
-            }
-        }
-        if (!flag) cout << "Save data Compressor Station in file" << endl;
-    }
-    else {
-        cout << "Error" << endl;
-    }
-
-}
-
-//запись в файл
-//void Save(const Pipe& p, const CompressorStation& cs) {
-//    ofstream fout;
-//    fout.open("file.txt", ios::out);
-//    if (p.namePipe == "" || cs.nameCompressorStation == "") cout << "Enter data " << endl;
-//    else{
-//        if (fout.is_open())
-//        {
-//            fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
-//            fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
-//            fout.close();
-//        }
-//    }
-//    
-//}
 
 
 void SavePipe(const Pipe& p) {
@@ -302,8 +257,7 @@ int main()
         }
         case 7:
         {
-            LoadPipe(pipe1);
-            LoadCS(station);
+            Load(pipe1, station);
             break;
         }
         case 0:

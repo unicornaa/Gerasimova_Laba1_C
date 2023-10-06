@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-//#include <windows.h>
 using namespace std;
 
 template <typename T>
@@ -12,7 +11,7 @@ T GetCorrectNumber(T min, T max ) {
     {
         cin.clear();//сбрасываем биты ошибок и буфер
         cin.ignore(1000000, '\n');//сбрасываем до какого-то символа
-        cout << "Type number (" << min << "-" << max << "):";
+        cout << "Type again" << min << "-" << max << ":";
     }
     return x;
 }
@@ -32,12 +31,11 @@ struct CompressorStation {
 
 };
 
-
 //считывание из файла
 void Load(Pipe& p, CompressorStation& cs) {
 
     ifstream fin;
-    fin.open("file1.txt", ios::in);
+    fin.open("file.txt", ios::in);
     
     if (fin.is_open())
     {
@@ -82,7 +80,7 @@ void Load(Pipe& p, CompressorStation& cs) {
 
 void SavePipe(const Pipe& p) {
     ofstream fout;
-    fout.open("file.txt", ios::app);
+    fout.open("file.txt", ios::out);
 
     if (fout.is_open())
     {
@@ -95,7 +93,7 @@ void SavePipe(const Pipe& p) {
 
 void SaveCS(const CompressorStation& cs) {
     ofstream fout;
-    fout.open("file.txt", ios::out);
+    fout.open("file.txt", ios::app);
     if (fout.is_open())
     {
         fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
@@ -107,16 +105,14 @@ void SaveCS(const CompressorStation& cs) {
 void SaveAll(const Pipe& p, const CompressorStation& cs) {
     if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
     else {
-        if( p.namePipe == ""){
+        if( p.namePipe != ""){
+            SavePipe(p);
+            
+        }
+        if (cs.nameCompressorStation != "") {
             SaveCS(cs);
         }
-        else if (cs.nameCompressorStation == "") {
-            SavePipe(p);
-        }
-        else {
-            SavePipe(p);
-            SaveCS(cs);
-        }
+
     }
 }
 
@@ -139,32 +135,18 @@ istream& operator >> (istream& in, Pipe& p)
     cin.ignore(10000, '\n');//сбрасываем до какого-то символа
     getline(cin, p.namePipe);
 
-    /*if (cin.fail()) {
-        cin.clear();
-        cin.ignore(10000, '\n');
-    }*/
-
-    do {
-        cin.clear();//сбрасываем биты ошибок и буфер
-        cin.ignore(10000, '\n');
-        cout << "Type pipe length: ";
-        cin >> p.length;
-        
-    } while (cin.fail() || p.length < 0);
-
-    do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Type pipe diameter: ";
-        cin >> p.diameter;
-    }while (cin.fail() || p.diameter < 0);
+    cout << "Type pipe length: ";
+    p.length = GetCorrectNumber(1, 20000);
+    cout << "Type pipe diameter: ";
+    p.diameter = GetCorrectNumber(1, 20000);
 
     do {
         cin.clear();
         cin.ignore(10000, '\n');
         cout << "Pipe under repair? ";
         cin >> p.InRepairs;
-    }while (cin.fail() || (p.InRepairs != 0 && p.InRepairs != 1));
+    }while (cin.fail());
+
     return in;
 }
 
@@ -174,39 +156,41 @@ istream& operator >> (istream& in, CompressorStation& cs)
     cin.ignore(10000, '\n');
     getline(cin, cs.nameCompressorStation);
 
-    do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Type number Workshop: ";
-        cin >> cs.numberWorkshop;
-    } while (cin.fail() || cs.numberWorkshop < 0);
+    cout << "Type number Workshop: ";
+    cs.numberWorkshop = GetCorrectNumber(1, 20000);
 
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
         cout << "Type number Workshop in job: ";
-        cin >> cs.numberWorkshopJob;
+        cs.numberWorkshopJob = GetCorrectNumber(1, 20000);
     } while (cin.fail() || cs.numberWorkshopJob < 0 || cs.numberWorkshopJob > cs.numberWorkshop);
 
-    do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Type station performance: ";
-        cin >> cs.performance;
-    } while (cin.fail() || cs.performance < 0 || cs.performance > 100);
+    
+    cout << "Type station performance: ";
+    cs.performance = GetCorrectNumber(0, 100);
+
     return in;
 }
 
 //оператор вывода
 ostream& operator << (ostream& out, const Pipe& p)
 {
-    out << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+    if (p.namePipe != "") {
+        out << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+    }
+    else {
+        cout << "No data pipe" << endl;
+    }
     return out;
 }
 
 ostream& operator << (ostream& out, const CompressorStation& cs)
 {
-    out << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl << endl;
+    if (cs.nameCompressorStation != "") {
+        out << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl << endl;
+    }
+    else {
+        cout << "No data Compressor Station" << endl;
+    }
     return out;
 
 }

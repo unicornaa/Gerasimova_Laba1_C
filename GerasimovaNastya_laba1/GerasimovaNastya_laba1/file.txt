@@ -1,1 +1,5 @@
+Name pipe: 23
+Length: 32
+Diameter: 23
+In repairs: 1
 

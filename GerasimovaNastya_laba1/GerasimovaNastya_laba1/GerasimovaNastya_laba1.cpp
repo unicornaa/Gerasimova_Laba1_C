@@ -32,28 +32,57 @@ struct CompressorStation {
 };
 
 //считывание из файла
-void Load(Pipe& p, CompressorStation& cs) {
+void LoadPipe(Pipe& p) {
 
     ifstream fin;
+    string f;
+    bool flag = 0;
     fin.open("file.txt", ios::in);
     
     if (fin.is_open())
     {
-        fin >> p.namePipe;
-        if (p.namePipe != "") {
-            fin >> p.length;
-            fin >> p.diameter;
-            fin >> p.InRepairs;
-            fin >> cs.nameCompressorStation;
-            fin >> cs.numberWorkshop;
-            fin >> cs.numberWorkshopJob;
-            fin >> cs.performance;
-            fin.close();
+        while (!fin.eof()) {
+            fin >> f;
+            if (f == "Name pipe: ") {
+                fin >> p.namePipe;
+                fin >> p.length;
+                fin >> p.diameter;
+                fin >> p.InRepairs;
+                fin.close();
+                flag = 1;
+                break;
+            }
         }
-        else {
-            cout << "Save data in file" << endl;
+        if (!flag) cout << "Save data Pipe in file" << endl;
+    }
+    else {
+        cout << "Error" << endl;
+    }
+
+}
+
+void LoadCS(CompressorStation& cs) {
+
+    ifstream fin;
+    string f;
+    bool flag = 0;
+    fin.open("file.txt", ios::in);
+
+    if (fin.is_open())
+    {
+        while (!fin.eof()) {
+            fin >> f;
+            if (f == "Name CS: ") {
+                fin >> cs.nameCompressorStation;
+                fin >> cs.numberWorkshop;
+                fin >> cs.numberWorkshopJob;
+                fin >> cs.performance;
+                fin.close();
+                flag = 1;
+                break;
+            }
         }
-        
+        if (!flag) cout << "Save data Compressor Station in file" << endl;
     }
     else {
         cout << "Error" << endl;
@@ -211,16 +240,20 @@ bool InputBool() {
 }
 
 void EditCS(CompressorStation& cs) {
-    cout << " Start one workshop - ' 1', stop - '0': " << endl;
-    bool sign = InputBool();
-    if (sign == 1) {
-        if (cs.numberWorkshopJob == cs.numberWorkshop) cout << "all workshops are working" << endl;
-        else cs.numberWorkshopJob++;
+    if (cs.nameCompressorStation != "") {
+        cout << " Start one workshop - ' 1', stop - '0': " << endl;
+        bool sign = InputBool();
+        if (sign == 1) {
+            if (cs.numberWorkshopJob == cs.numberWorkshop) cout << "all workshops are working" << endl;
+            else cs.numberWorkshopJob++;
+        }
+        else {
+            if (cs.numberWorkshopJob == 0) cout << "all workshops are sopped" << endl;
+            else cs.numberWorkshopJob--;
+        }
+
     }
-    else {
-        if (cs.numberWorkshopJob == 0) cout << "all workshops are sopped" << endl;
-        else cs.numberWorkshopJob--;
-    }
+    else cout << "No data of Compressor Station" << endl;
 }
 
 int main()
@@ -251,7 +284,10 @@ int main()
         
         case 4:
         {
-            EditPipe(pipe1);
+            if (pipe1.namePipe != "") { 
+                EditPipe(pipe1); 
+            }
+            else cout << "No data of Pipe" << endl;
             break;
         }
         case 5:
@@ -266,7 +302,8 @@ int main()
         }
         case 7:
         {
-            Load(pipe1, station);
+            LoadPipe(pipe1);
+            LoadCS(station);
             break;
         }
         case 0:

@@ -13,7 +13,7 @@ T GetCorrectNumber(T min, T max ) {
         cin.ignore(1000000, '\n');//сбрасываем до какого-то символа
         cout << "Type again " << min << "-" << max << ":";
     }
-    return x;
+    return x; 
 }
 
 struct Pipe {
@@ -31,29 +31,62 @@ struct CompressorStation {
 
 };
 
+
+
 //считывание из файла
-void Load(Pipe& p, CompressorStation& cs) {
+void LoadPipe(Pipe& p) {
 
     ifstream fin;
-    fin.open("file1.txt", ios::in);
+    string f;
+    bool flag = 0;
+    fin.open("file.txt", ios::in);
 
     if (fin.is_open())
     {
-        fin >> p.namePipe;
-        if (p.namePipe != "") {
-            fin >> p.length;
-            fin >> p.diameter;
-            fin >> p.InRepairs;
-            fin >> cs.nameCompressorStation;
-            fin >> cs.numberWorkshop;
-            fin >> cs.numberWorkshopJob;
-            fin >> cs.performance;
-            fin.close();
+        while (!fin.eof()) {
+            fin >> f;
+            if (f == "PIPE") {
+                fin >> ws;
+                getline(fin, p.namePipe);
+                fin >> p.length;
+                fin >> p.diameter;
+                fin >> p.InRepairs;
+                fin.close();
+                flag = 1;
+                break;
+            }
         }
-        else {
-            cout << "Save data in file" << endl;
-        }
+        if (!flag) cout << "Save data Pipe in file" << endl;
+    }
+    else {
+        cout << "Error" << endl;
+    }
 
+}
+
+void LoadCS(CompressorStation& cs) {
+
+    ifstream fin;
+    string f;
+    bool flag = 0;
+    fin.open("file.txt", ios::in);
+
+    if (fin.is_open())
+    {
+        while (!fin.eof()) {
+            fin >> f;
+            if (f == "Station") {
+                fin >> ws;
+                getline(fin, cs.nameCompressorStation);
+                fin >> cs.numberWorkshop;
+                fin >> cs.numberWorkshopJob;
+                fin >> cs.performance;
+                fin.close();
+                flag = 1;
+                break;
+            }
+        }
+        if (!flag) cout << "Save data Compressor Station in file" << endl;
     }
     else {
         cout << "Error" << endl;
@@ -62,41 +95,26 @@ void Load(Pipe& p, CompressorStation& cs) {
 }
 
 
-void SavePipe(const Pipe& p) {
-    ofstream fout;
-    fout.open("file.txt", ios::out);
-
-    if (fout.is_open())
-    {
-        fout << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
-        fout.close();
-    }
-        
-
-}
-
-void SaveCS(const CompressorStation& cs) {
-    ofstream fout;
-    fout.open("file.txt", ios::app);
-    if (fout.is_open())
-    {
-        fout << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
-        fout.close();
-    }
-
-}
 
 void SaveAll(const Pipe& p, const CompressorStation& cs) {
-    if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
-    else {
-        if( p.namePipe != ""){
-            SavePipe(p);
-            
-        }
-        if (cs.nameCompressorStation != "") {
-            SaveCS(cs);
-        }
+    ofstream fout;
+    fout.open("file.txt", ios::out);
+    if (fout.is_open())
+    {
+        if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
+        else {
+            if (p.namePipe != "") {
+                //fout << "PIPE" << p.name << "\nName pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl;
+                fout << "PIPE" << endl << p.namePipe << endl <<  p.length << endl <<  p.diameter << endl <<  p.InRepairs << endl;
 
+                
+            }
+            if (cs.nameCompressorStation != "") {
+                fout << "Station" << endl << cs.nameCompressorStation << endl << cs.numberWorkshop << endl << cs.numberWorkshopJob << endl << cs.performance << endl;
+                
+            }
+
+        }fout.close();
     }
 }
 
@@ -159,7 +177,7 @@ istream& operator >> (istream& in, CompressorStation& cs)
 ostream& operator << (ostream& out, const Pipe& p)
 {
     if (p.namePipe != "") {
-        out << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl << endl;
+        out << "Name pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl;
     }
     else {
         cout << "No data pipe" << endl;
@@ -170,7 +188,7 @@ ostream& operator << (ostream& out, const Pipe& p)
 ostream& operator << (ostream& out, const CompressorStation& cs)
 {
     if (cs.nameCompressorStation != "") {
-        out << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl << endl;
+        out << "Name CS: " << cs.nameCompressorStation << "\nNumber workshop: " << cs.numberWorkshop << "\nNumber workshop in job: " << cs.numberWorkshopJob << "\nPerformance: " << cs.performance << endl;
     }
     else {
         cout << "No data Compressor Station" << endl;
@@ -257,7 +275,8 @@ int main()
         }
         case 7:
         {
-            Load(pipe1, station);
+            LoadPipe(pipe1);
+            LoadCS(station);
             break;
         }
         case 0:

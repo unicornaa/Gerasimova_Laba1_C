@@ -94,29 +94,55 @@ void LoadCS(CompressorStation& cs) {
 
 }
 
-
-
-void SaveAll(const Pipe& p, const CompressorStation& cs) {
-    ofstream fout;
-    fout.open("file.txt", ios::out);
-    if (fout.is_open())
-    {
-        if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
-        else {
-            if (p.namePipe != "") {
-                //fout << "PIPE" << p.name << "\nName pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl;
-                fout << "PIPE" << endl << p.namePipe << endl <<  p.length << endl <<  p.diameter << endl <<  p.InRepairs << endl;
-
-                
-            }
-            if (cs.nameCompressorStation != "") {
-                fout << "Station" << endl << cs.nameCompressorStation << endl << cs.numberWorkshop << endl << cs.numberWorkshopJob << endl << cs.performance << endl;
-                
-            }
-
-        }fout.close();
-    }
+void SavePipe(const Pipe& p, ofstream& fout) {
+    fout << "PIPE" << endl << p.namePipe << endl << p.length << endl << p.diameter << endl << p.InRepairs << endl;
 }
+
+void SaveCS(const CompressorStation& cs, ofstream& fout) {
+
+    fout << "Station" << endl << cs.nameCompressorStation << endl << cs.numberWorkshop << endl << cs.numberWorkshopJob << endl << cs.performance << endl;
+}
+
+void SaveAll(const Pipe& p, const CompressorStation& cs) 
+{
+    if (p.namePipe == "" && cs.nameCompressorStation == "")
+    {
+        cout << "Enter data " << endl;
+        return;
+    }
+    ofstream fout("file.txt");
+    if (!fout.is_open())
+    {
+        cout << "No file" << endl;
+        return;
+    }
+    
+    if (p.namePipe != "")
+        SavePipe(p, fout);
+    if (cs.nameCompressorStation != "")
+        SaveCS(cs, fout);
+    fout.close();
+}
+
+//void SaveAll(const Pipe& p, const CompressorStation& cs) {
+//    ofstream fout;
+//    fout.open("file.txt", ios::out);
+//    if (fout.is_open())
+//    {
+//        if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
+//        else {
+//            if (p.namePipe != "") {
+//                //fout << "PIPE" << p.name << "\nName pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl;
+//                fout << "PIPE" << endl << p.namePipe << endl <<  p.length << endl <<  p.diameter << endl <<  p.InRepairs << endl;
+//            }
+//            if (cs.nameCompressorStation != "") {
+//                fout << "Station" << endl << cs.nameCompressorStation << endl << cs.numberWorkshop << endl << cs.numberWorkshopJob << endl << cs.performance << endl;
+//                
+//            }
+//
+//        }fout.close();
+//    }
+//}
 
 void PrintMenu() {
     cout << "1. Add Pipe " << endl

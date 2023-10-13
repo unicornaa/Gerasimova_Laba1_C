@@ -34,65 +34,51 @@ struct CompressorStation {
 
 
 //считывание из файла
-void LoadPipe(Pipe& p) {
-
-    ifstream fin;
-    string f;
-    bool flag = 0;
-    fin.open("file.txt", ios::in);
-
-    if (fin.is_open())
-    {
-        while (!fin.eof()) {
-            fin >> f;
-            if (f == "PIPE") {
-                fin >> ws;
-                getline(fin, p.namePipe);
-                fin >> p.length;
-                fin >> p.diameter;
-                fin >> p.InRepairs;
-                fin.close();
-                flag = 1;
-                break;
-            }
-        }
-        if (!flag) cout << "Save data Pipe in file" << endl;
-    }
-    else {
-        cout << "Error" << endl;
-    }
+void LoadPipe(Pipe& p, ifstream& fin) {
+    fin >> p.namePipe;
+    fin >> p.length;
+    fin >> p.diameter;
+    fin >> p.InRepairs;
 
 }
 
-void LoadCS(CompressorStation& cs) {
-
-    ifstream fin;
-    string f;
-    bool flag = 0;
-    fin.open("file.txt", ios::in);
-
-    if (fin.is_open())
-    {
-        while (!fin.eof()) {
-            fin >> f;
-            if (f == "Station") {
-                fin >> ws;
-                getline(fin, cs.nameCompressorStation);
-                fin >> cs.numberWorkshop;
-                fin >> cs.numberWorkshopJob;
-                fin >> cs.performance;
-                fin.close();
-                flag = 1;
-                break;
-            }
-        }
-        if (!flag) cout << "Save data Compressor Station in file" << endl;
-    }
-    else {
-        cout << "Error" << endl;
-    }
+void LoadCS(CompressorStation& cs, ifstream& fin) {
+    fin >> cs.nameCompressorStation;
+    fin >> cs.numberWorkshop;
+    fin >> cs.numberWorkshopJob;
+    fin >> cs.performance;
 
 }
+
+void LoadAll(Pipe& p, CompressorStation& cs)
+{
+
+
+    ifstream fin;
+    fin.open("file.txt", ios::in);
+    if (!fin.is_open())
+    {
+        cout << "Error" << endl;
+        return;
+    }
+
+    while (!fin.eof()) {
+
+        string f;
+        fin >> f;
+
+        if (f == "PIPE") {
+            LoadPipe(p, fin);
+        }
+        if (f == "Station") {
+            LoadCS(cs, fin);
+        }
+
+    }fin.close();
+
+}
+
+
 
 void SavePipe(const Pipe& p, ofstream& fout) {
     fout << "PIPE" << endl << p.namePipe << endl << p.length << endl << p.diameter << endl << p.InRepairs << endl;
@@ -301,8 +287,7 @@ int main()
         }
         case 7:
         {
-            LoadPipe(pipe1);
-            LoadCS(station);
+            LoadAll(pipe1, station);
             break;
         }
         case 0:

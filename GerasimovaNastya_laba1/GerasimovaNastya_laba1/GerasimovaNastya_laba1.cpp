@@ -224,7 +224,8 @@ bool InputBool() {
     return state;
 }
 
-void EditCS(CompressorStation& cs) {
+void EditCS(CompressorStation& cs) 
+{
     if (cs.nameCompressorStation != "") {
         cout << " Start one workshop - ' 1', stop - '0': " << endl;
         bool sign = InputBool();

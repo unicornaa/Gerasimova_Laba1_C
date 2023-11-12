@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 using namespace std;
 
 template <typename T>
@@ -31,8 +32,6 @@ struct CompressorStation {
 
 };
 
-
-
 //считывание из файла
 void LoadPipe(Pipe& p, ifstream& fin) {
     fin >> p.namePipe;
@@ -52,8 +51,6 @@ void LoadCS(CompressorStation& cs, ifstream& fin) {
 
 void LoadAll(Pipe& p, CompressorStation& cs)
 {
-
-
     ifstream fin;
     fin.open("file.txt", ios::in);
     if (!fin.is_open())
@@ -77,8 +74,6 @@ void LoadAll(Pipe& p, CompressorStation& cs)
     }fin.close();
 
 }
-
-
 
 void SavePipe(const Pipe& p, ofstream& fout) {
     fout << "PIPE" << endl << p.namePipe << endl << p.length << endl << p.diameter << endl << p.InRepairs << endl;
@@ -109,26 +104,6 @@ void SaveAll(const Pipe& p, const CompressorStation& cs)
         SaveCS(cs, fout);
     fout.close();
 }
-
-//void SaveAll(const Pipe& p, const CompressorStation& cs) {
-//    ofstream fout;
-//    fout.open("file.txt", ios::out);
-//    if (fout.is_open())
-//    {
-//        if (p.namePipe == "" && cs.nameCompressorStation == "") cout << "Enter data " << endl;
-//        else {
-//            if (p.namePipe != "") {
-//                //fout << "PIPE" << p.name << "\nName pipe: " << p.namePipe << "\nLength: " << p.length << "\nDiameter: " << p.diameter << "\nIn repairs: " << p.InRepairs << endl;
-//                fout << "PIPE" << endl << p.namePipe << endl <<  p.length << endl <<  p.diameter << endl <<  p.InRepairs << endl;
-//            }
-//            if (cs.nameCompressorStation != "") {
-//                fout << "Station" << endl << cs.nameCompressorStation << endl << cs.numberWorkshop << endl << cs.numberWorkshopJob << endl << cs.performance << endl;
-//                
-//            }
-//
-//        }fout.close();
-//    }
-//}
 
 void PrintMenu() {
     cout << "1. Add Pipe " << endl
@@ -244,6 +219,7 @@ void EditCS(CompressorStation& cs)
 
 int main()
 {
+    map <int, Pipe> pipe_map;
     Pipe pipe1;
     CompressorStation station;
     while (1)
@@ -253,7 +229,16 @@ int main()
         {
         case 1:
         {
+            int count, Pipe;
+            cin >> count;
             cin >> pipe1;
+            pipe_map.emplace(count, pipe1);
+            for (auto& item : pipe_map)
+            {
+                cout << item.first << ' ' << item.second << endl;
+            }
+            
+      
             break;
         }
         case 2:
@@ -303,4 +288,5 @@ int main()
 
     }
     return 0; 
+
 }

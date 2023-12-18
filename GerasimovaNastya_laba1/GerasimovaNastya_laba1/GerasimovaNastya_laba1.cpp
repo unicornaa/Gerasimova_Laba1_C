@@ -5,8 +5,10 @@
 #include "PipeLine.h"
 #include "utils.h"
 #include <unordered_set>
-#include <filesystem>
 #include "CompressorStation.h"
+#include "Graph.h"
+#include "netWork.h"
+#include <vector>
 
 using namespace std;
 
@@ -28,58 +30,58 @@ int CorrectIntID() {
     cerr << id << endl;
     return id;
 }
-//удаление трубы
-void DeletePipe(unordered_map<int, PipeLine>& pipes, const int& id) {
-    pipes.erase(id);
-}
-
-//удаление станции
-void DeleteStation(unordered_map<int, CompressorStation>& stations) {
-    cout << "Type station ID for delete: ";
-    int id;
-    id = CorrectIntID();
-    if (CheckID(stations, id)) {
-        stations.erase(id);
-    }
-    else {
-        cout << "No station with such ID" << endl;
-    }
-}
+////удаление трубы
+//void DeletePipe(unordered_map<int, PipeLine>& pipes, const int& id) {
+//    pipes.erase(id);
+//}
+//
+////удаление станции
+//void DeleteStation(unordered_map<int, CompressorStation>& stations) {
+//    cout << "Type station ID for delete: ";
+//    int id;
+//    id = CorrectIntID();
+//    if (CheckID(stations, id)) {
+//        stations.erase(id);
+//    }
+//    else {
+//        cout << "No station with such ID" << endl;
+//    }
+//}
 
 //редактирование трубы
-void EditPipe(unordered_map<int, PipeLine>& pipes) {
-    cout << "Type pipeline ID for editing: ";
-    int id;
-    id = CorrectIntID();
-    if (CheckID(pipes, id)) {
-        pipes[id].InRepairs = !(pipes[id].InRepairs);
-    }
-    else {
-        cout << "No pipeline with such ID" << endl;
-    }
-}
+//void EditPipe(netWork& newNetWork) {
+//    cout << "Type pipeline ID for editing: ";
+//    int id;
+//    id = CorrectIntID();
+//    if (CheckID(pipes, id)) {
+//        pipes[id].InRepairs = !(pipes[id].InRepairs);
+//    }
+//    else {
+//        cout << "No pipeline with such ID" << endl;
+//    }
+//}
 
 ///редактирование станции
-void EditCS(unordered_map<int, CompressorStation>& stations) {
-    cout << "Type compressor station ID for editing: ";
-    int id;
-    id = CorrectIntID();
-    if (CheckID(stations, id)) {
-        string decision;
-        cout << "Type \"1\", if you want to start one workshop,type \"2\" - if you want to stop one workshop: ";
-        std::cin >> decision;
-        if (decision == "1" && stations[id].numberWorkshopJob < stations[id].getNumberWorkshop()) {
-            stations[id].numberWorkshopJob++;
-        }
-        if (decision == "2" && stations[id].numberWorkshopJob > 0) {
-            stations[id].numberWorkshopJob--;
-        }
-        cerr << decision << endl;
-    }
-    else {
-        cout << "No compressor station with such ID" << endl;
-    }
-}
+//void EditCS(unordered_map<int, CompressorStation>& stations) {
+//    cout << "Type compressor station ID for editing: ";
+//    int id;
+//    id = CorrectIntID();
+//    if (CheckID(stations, id)) {
+//        string decision;
+//        cout << "Type \"1\", if you want to start one workshop,type \"2\" - if you want to stop one workshop: ";
+//        std::cin >> decision;
+//        if (decision == "1" && stations[id].numberWorkshopJob < stations[id].getNumberWorkshop()) {
+//            stations[id].numberWorkshopJob++;
+//        }
+//        if (decision == "2" && stations[id].numberWorkshopJob > 0) {
+//            stations[id].numberWorkshopJob--;
+//        }
+//        cerr << decision << endl;
+//    }
+//    else {
+//        cout << "No compressor station with such ID" << endl;
+//    }
+//}
 
 
 
@@ -138,6 +140,8 @@ void FindPipeLine(const unordered_map<int, PipeLine>& pipes) {
     }
 }
 
+
+
 // поиск Compressor Station по фильтру
 template <typename type>
 using StationFilter = bool(*)(const CompressorStation& station, type param);
@@ -190,6 +194,23 @@ void FindCS(const unordered_map<int, CompressorStation>& stations) {
     }
 }
 
+//void FindAllStationsByName(netWork& newNetWork) {
+//    string name;
+//    cout << "Enter station name for searching: ";
+//    Save(cin, name);
+//    for (int id : FindStationsByFilter(newNetWork.getCS(), CheckByName, name)) {
+//        cout << newNetWork.getCS()[id];
+//    }
+//}
+//
+//void FindAllStationsByBusyWorkshops(netWork& newNetWork) {
+//    cout << "Enter percent of unworking stations for searching: ";
+//    double percent = CorrectInput(0.0, 100.0);
+//    for (int id : FindStationsByFilter(newNetWork.getCS(), CheckByUnworkingWorkshops, percent)) {
+//        cout << newNetWork.getCS()[id];
+//    }
+//}
+
 void PrintMenu() {
     cout << "1. Add Pipe " << endl
         << "2. Add Compressor Station " << endl
@@ -203,6 +224,8 @@ void PrintMenu() {
         << "10. Find Pipe " << endl
         << "11. Find Compressor Station " << endl
         << "12. Pack editing of pipelines " << endl
+        << "13. Graph " << endl
+        << "14. Topologic sort " << endl
         << "0. Exit " << endl
         << "Choose action: ";
 }
@@ -214,9 +237,9 @@ void FindMenu() {
         << "Enter a number from 1 to 2: ";
 }
 
-void PrintFoundPipes(const int& id, unordered_map<int, PipeLine>& pipes) {
-    cout << pipes[id];
-}
+//void PrintFoundPipes(const int& id, unordered_map<int, PipeLine>& pipes) {
+//    cout << pipes[id];
+//}
 
 void EditMenu() {
     cout << "1. Select pipelines by ID" << endl
@@ -232,7 +255,7 @@ void EditPipeline(unordered_map<int, PipeLine>& pipes, const int& id) {
 }
 
 
-unordered_set<int> PackEdit(unordered_map<int, PipeLine>& pipes) {
+unordered_set<int> PackEdit(netWork& newNetWork) {
     unordered_set<int> pipesID{};
     FindMenu();
     switch (CorrectInput(1, 2)) {
@@ -240,8 +263,9 @@ unordered_set<int> PackEdit(unordered_map<int, PipeLine>& pipes) {
         string name;
         cout << "Input pileline name for searching: ";
         Save(cin, name);
-        for (int id : FindPipelinesByFilter(pipes, CheckByName, name)) {
-            PrintFoundPipes(id, pipes);
+        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByName, name)) {
+            cout << newNetWork.getPipe()[id];
+            //PrintFoundPipes(id, pipes);
             pipesID.insert(id);
         }
         break;
@@ -250,8 +274,9 @@ unordered_set<int> PackEdit(unordered_map<int, PipeLine>& pipes) {
         bool flag;
         cout << "Input station status for searching: ";
         flag = CorrectInput(false, true);
-        for (int id : FindPipelinesByFilter(pipes, CheckByRepair, flag)) {
-            PrintFoundPipes(id, pipes);
+        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByRepair, flag)) {
+            cout << newNetWork.getPipe()[id];
+            //PrintFoundPipes(id, pipes);
             pipesID.insert(id);
         }
         break;
@@ -259,9 +284,95 @@ unordered_set<int> PackEdit(unordered_map<int, PipeLine>& pipes) {
     }
     return pipesID;
 }
+unordered_set<int> SelectPipesID(netWork& newNetWork) {
+    unordered_set<int> pipesID;
+    while (1) {
+        cout << "Input ID of pipeline or 0 to complete: ";
+        int id;
+        id = CorrectIntID();
+        if (id) {
+            if (CheckID(newNetWork.getPipe(), id)) {
+                cout << newNetWork.getPipe()[id];
+                pipesID.insert(id);
+            }
+            else {
+                cout << "No pipeline with such ID" << endl;
+            }
+        }
+        else {
+            break;
+        }
+    }
+    return pipesID;
+}
+
+bool checkPipeD(int diameter) {
+    switch (diameter) {
+    case 500: {
+        return 1;
+    }
+    case 700: {
+        return 1;
+    }
+    case 1000: {
+        return 1;
+    }
+    case 1400: {
+        return 1;
+    }
+    default:
+        cout << "Invalid diameter\n Try again: ";
+        return 0;
+    }
+}
+
+int inputValue() {
+    int state;
+    while (1) {
+        if (!(cin >> state)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Try again: ";
+        }
+        else if (state >= 1 || state == -1) {
+            cerr << state << endl;
+            return state;
+        }
+        else cout << "enter value more than 0: ";
+    }
+    cerr << state << endl;
+    return state;
+}
+
+//---------------------------ЗАПРОС ВВОДА ПАРАМЕТРОВ ДЛЯ ГРАФА------------------------------//
+//void requestForParameters(int& IDEntry, int& IDExit, int& diam, netWork& newNetWork) {
+//    while (1) {
+//        cout << "Enter the CS entry ID or enter -1 to create a CS: ";
+//        IDEntry = inputValue();
+//        if (IDEntry == -1)
+//        {
+//            newNetWork.addCS();
+//            IDEntry = newNetWork.getCS()[newNetWork.getCS().rbegin()->first].getStationID();
+//        }
+//        cout << "Enter the CS exit ID: ";
+//        IDExit = inputT(1);
+//        if (newNetWork.getCS().contains(IDEntry) && newNetWork.getCS().contains(IDExit) && IDEntry != IDExit)
+//            break;
+//        cout << "There are no such IDs. Enter another ID\n";
+//    }
+//    cout << "Enter diametr of pipe: ";
+//    diam = inputT(1);
+//    while (1) {
+//        if (!checkPipeD(diam)) {
+//            diam = inputT(1);
+//        }
+//        else break;
+//    }
+//}
+//топологическая сортировка
 
 
-//
+
 int main()
 {
     redirect_output_wrapper cerr_out(cerr);
@@ -269,52 +380,65 @@ int main()
     if (logfile)
         cerr_out.redirect(logfile);
 
-    unordered_map<int, PipeLine> pipes;
-    unordered_map<int, CompressorStation> stations;
+    unordered_map<int, edge> graphG;
+    vector <int> usedPipe;
+    vector <int> deletedCS;
+    netWork newNetWork;
+    /*unordered_map<int, PipeLine> pipes;
+    unordered_map<int, CompressorStation> stations;*/
 
     while (1)
     {
         PrintMenu();
-        switch (CorrectInput(0, 12))
+        int i = CorrectInput(0, 14);
+        switch (i)
+        //switch (CorrectInput(0, 12))
         {
         case 1:
         {
             PipeLine pipe; //location 
             cin >> pipe;
-            pipes.insert({ pipe.getPipeID(), pipe });
+            //pipes.insert({ pipe.getPipeID(), pipe });
+            newNetWork.addPipe(pipe);
             break;
         }
         case 2:
         {
             CompressorStation station;
             cin >> station;
-            stations.insert({ station.getStationID(), station });
+            //stations.insert({station.getStationID(), station});
+            newNetWork.addCS(station);
             break;
         }
         case 3:
         {
-            for (auto& i : pipes) {
+            /*for (auto& i : pipes) {
                 cout << i.second << endl;
             }
             for (auto& i : stations) {
                 cout << i.second << endl;
             }
+            break;*/
+            newNetWork.printAllObj();
+            /*for (auto const& edge : graphG) {
+                graphG[edge.first].printEdge();
+            }*/
             break;
         }
 
         case 4:
         {
-            EditPipe(pipes);
+            newNetWork.EditPipe();
             break;
         }
         case 5:
         {
-            EditCS(stations);
+            newNetWork.EditCS();
             break;
         }
         case 6:
         {
-            cout << "Type name fail: ";
+            /*cout << "Type name fail: ";
             string in_file;
             cin >> in_file;
             ofstream fout(in_file);
@@ -333,20 +457,16 @@ int main()
                 if (!cs.second.nameCompressorStation.size()) {
                     stations[cs.first].saveCS(fout);
                 }
-            }
+            }*/
+            newNetWork.saveToFile();
             break;
         }
         case 7:
         {
-            cout << "Type name fail: ";
+            /*cout << "Type name fail: ";
             string read_file;
             cin >> read_file;
             ifstream read(read_file);
-            //if (read.peek() == std::ifstream::traits_type::eof()) {
-            //    cout << "Error\n";
-            //    //break;
-            //}
-            //else {
             string marker;
             while (getline(read, marker)) {
                 if (marker == "PIPE") {
@@ -359,8 +479,9 @@ int main()
                     read_ks.loadCS(read);
                     stations.insert({ read_ks.getStationID(), read_ks });
                 }
-                //}
-            }
+             
+            }*/
+            newNetWork.loadFromFile();
             break;
         }
         case 8:
@@ -383,17 +504,17 @@ int main()
         }
         case 10:
         {
-            FindPipeLine(pipes);
+            FindPipeLine(newNetWork);
             break;
         }
         case 11:
         {
-            FindCS(stations);
+            FindCS(newNetWork);
             break;
         }
         case 12:
         {
-            unordered_set<int> pipesID = PackEdit(pipes);//будет использоваться для хранения идентификаторов (ID) трубопроводов
+            unordered_set<int> pipesID = PackEdit(newNetWork);//будет использоваться для хранения идентификаторов (ID) трубопроводов
             bool flag = true;
             while (flag) {
                 EditMenu();
@@ -447,6 +568,40 @@ int main()
                 }
                 }
             }
+            break;
+        }
+        case 13:
+        {
+            int IDEntry, IDExit, diam;
+            bool flag = 0;
+            requestForParameters(IDEntry, IDExit, diam, newNetWork);
+            while (1)
+            {
+                vector <int> res = findPipeByDiam(newNetWork, diam);
+                for (auto& p : res) {
+                    bool pipeInUse = (find(usedPipe.begin(), usedPipe.end(), p) != usedPipe.end());
+                    if (!pipeInUse) {
+                        edge newEdge;
+                        newEdge.addEdge(IDEntry, IDExit, newNetWork.getPipe()[p]);
+                        graphG.insert(pair<int, edge>(edge::maxIdG, newEdge));
+                        usedPipe.push_back(p);
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag) {
+                    break;
+                }
+                newNetWork.addPipe();
+            }
+            for (auto& [key, p] : graphG) {
+                p.printEdge();
+            }
+            break;
+        }
+        case 14:
+        {
+            
             break;
         }
         case 0:

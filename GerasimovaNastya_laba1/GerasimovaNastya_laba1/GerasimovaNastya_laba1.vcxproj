@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -129,10 +129,14 @@
   <ItemGroup>
     <ClCompile Include="CompressorStation.cpp" />
     <ClCompile Include="GerasimovaNastya_laba1.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="netWork.cpp" />
     <ClCompile Include="PipeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompressorStation.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="netWork.h" />
     <ClInclude Include="PipeLine.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

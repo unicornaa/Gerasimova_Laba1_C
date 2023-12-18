@@ -51,3 +51,22 @@ T Correct(T max, T min = 1)
 	std::cerr << x << std::endl;
 	return x;
 }
+
+template <typename T>
+
+T inputT(T value) {
+
+	T state;
+	while (1) {
+		if (!(cin >> state)) {
+			cin.clear();
+			cin.ignore(1000, '\n');
+			cout << "Try again: ";
+		}
+		else if (state >= 0) {
+			return state;
+		}
+		else cout << "enter value more than 0: ";
+	}
+	return state;
+}

@@ -8,6 +8,10 @@ void CompressorStation::Reset()
 {
 	ID = 0;
 }
+void CompressorStation::SetID() const
+{
+	ID = id;
+}
 
 CompressorStation::CompressorStation()
 {
@@ -18,14 +22,57 @@ CompressorStation::CompressorStation()
 	performance = 0;
 }
 
+void CompressorStation::StartWorkshop()
+{
+	if (busyWorkshops < workshops) {
+		busyWorkshops++;
+	}
+}
+void CompressorStation::FinishWorkshop()
+{
+	if (busyWorkshops > 0) {
+		busyWorkshops--;
+	}
+}
+void CompressorStation::StartAmountIncrease()
+{
+	start++;
+}
+void CompressorStation::EndAmountIncrease()
+{
+	end++;
+}
+
 int CompressorStation::getStationID() const
 {
 	return id;
+}
+void CompressorStation::StartAmountDicrease()
+{
+	start--;
+}
+
+void CompressorStation::EndAmountDicrease()
+{
+	end--;
 }
 
 int CompressorStation::getNumberWorkshop() const
 {
 	return numberWorkshop;
+}
+
+int CompressorStation::getStationID() const
+{
+	return id;
+}
+int CompressorStation::getStationStart() const
+{
+	return start;
+}
+int CompressorStation::getStationEnd() const
+{
+	return end;
 }
 
 std::istream& operator >> (std::istream& in, CompressorStation& station)

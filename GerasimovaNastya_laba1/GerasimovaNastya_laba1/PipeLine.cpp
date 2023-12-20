@@ -3,7 +3,7 @@
 #include <fstream>
 #include "utils.h"
 
-int PipeLine::ID = 0;
+int PipeLine::ID = 1;
 
 void PipeLine::Reset()
 {
@@ -22,6 +22,64 @@ PipeLine::PipeLine()
 int PipeLine::getPipeID() const
 {
     return id;
+}
+
+int PipeLine::getDiameter() const
+{
+    return diameter;
+}
+
+bool checkPipeDiam(int diam) {
+    switch (diam) {
+    case 500: {
+        return 1;
+    }
+    case 700: {
+        return 1;
+    }
+    case 1000: {
+        return 1;
+    }
+    case 1400: {
+        return 1;
+    }
+    default:
+        cout << "Invalid diameter\n Try again: ";
+        return 0;
+    }
+}
+
+void PipeLine::addPipe()
+{
+    id = ID;
+    cout << "Enter name Pipe:";
+    cin >> ws;
+    getline(cin, namePipe);
+    cerr << namePipe << endl;
+    cout << "Enter the length of the pipe:";
+    length = inputT(0.2);
+    cout << "Enter the diameter of the pipe:";
+    diameter = inputT(1);
+    while (1) {
+        if (!checkPipeDiam(diameter)) {
+            diameter = inputT(1);
+        }
+        else break;
+    }
+    cout << "Enter 1 if the pipe is under repair otherwise 0:";
+    InRepairs = inputT(true);
+}
+
+void PipeLine::printPipe()
+{
+    if (namePipe == "") cout << "Input or load data to print" << endl;
+    else {
+        cout << "id: " << id << endl;
+        cout << "name Pipe: " << namePipe << endl;
+        cout << "length: " << length << endl;
+        cout << "diametr: " << diameter << endl;
+        cout << "Inrepair: " << InRepairs << endl;
+    }
 }
 
 void PipeLine::loadPipe(ifstream& fin) {
@@ -69,4 +127,9 @@ std::ostream& operator << (std::ostream& out, const PipeLine& pipe)
         << "\tIn Repairs: " << pipe.InRepairs;
     return out;
 }
+//редактирование трубы
+void PipeLine::EditPipe() {
+    InRepairs = !(InRepairs);
+}
+
 

@@ -17,6 +17,9 @@ public:
 	int numberWorkshopJob;
 	void loadCS(std::ifstream& fin);
 	void saveCS(std::ofstream& fout);
+	void EditCS();
+	void addCS();
+	void printCS();
 
 
 	friend std::istream& operator >> (std::istream& in, CompressorStation& station);

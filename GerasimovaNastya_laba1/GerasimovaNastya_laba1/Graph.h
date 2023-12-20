@@ -3,6 +3,7 @@
 #include "PipeLine.h"
 
 using namespace std;
+
 class edge
 {
 	int id;

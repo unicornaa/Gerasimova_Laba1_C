@@ -5,7 +5,7 @@
 #include <fstream>
 
 using namespace std;
-int edge::maxIdG = 1;
+int edge::maxIdG = 0;
 
 void edge::addEdge(int begin, int end, PipeLine& pipe)
 {

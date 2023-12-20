@@ -3,19 +3,25 @@
 #include <fstream>
 #include "utils.h"
 
-int PipeLine::ID = 1;
+int PipeLine::PipeID = 1;
 
-void PipeLine::Reset()
-{
-    ID = 0;
-}
+//void PipeLine::Reset()
+//{
+//    PipeID = 0;
+//}
 
 PipeLine::PipeLine()
 {
-    id = ++ID;
+    /*if (PipeID <= id) {
+        id = ++PipeID;
+    }
+    else {
+        id = PipeID;
+    }*/
+    id = 0;
     namePipe = "Unknown";
     length = 0.1;
-    diameter = 500;
+    diameter = 0;
     InRepairs = 0;
 }
 
@@ -51,14 +57,14 @@ bool checkPipeDiam(int diam) {
 
 void PipeLine::addPipe()
 {
-    id = ID;
-    cout << "Enter name Pipe:";
+    id = PipeID;
+    cout << "Type name pipe: ";
     cin >> ws;
     getline(cin, namePipe);
     cerr << namePipe << endl;
-    cout << "Enter the length of the pipe:";
+    cout << "Type pipe length: ";
     length = inputT(0.2);
-    cout << "Enter the diameter of the pipe:";
+    cout << "Type pipe diameter: ";
     diameter = inputT(1);
     while (1) {
         if (!checkPipeDiam(diameter)) {
@@ -66,7 +72,7 @@ void PipeLine::addPipe()
         }
         else break;
     }
-    cout << "Enter 1 if the pipe is under repair otherwise 0:";
+    cout << "Pipe under repair? ";
     InRepairs = inputT(true);
 }
 
@@ -74,59 +80,59 @@ void PipeLine::printPipe()
 {
     if (namePipe == "") cout << "Input or load data to print" << endl;
     else {
-        cout << "id: " << id << endl;
-        cout << "name Pipe: " << namePipe << endl;
-        cout << "length: " << length << endl;
-        cout << "diametr: " << diameter << endl;
-        cout << "Inrepair: " << InRepairs << endl;
+        cout << "ID: " << id << endl;
+        cout << "Name Pipe: " << namePipe << endl;
+        cout << "Length: " << length << endl;
+        cout << "Diameter: " << diameter << endl;
+        cout << "In repair: " << InRepairs << endl;
     }
 }
 
 void PipeLine::loadPipe(ifstream& fin) {
     if (fin.is_open()) {
-        id = ID;
-        //fin >> ws;
+        id = PipeID;
+        fin >> ws;
         getline(fin, namePipe);
         fin >> length;
         fin >> diameter;
         fin >> InRepairs;
+        fin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 }
 
 
 void PipeLine::savePipe(ofstream& fout) {
     if (fout.is_open()) {
-        fout << "PIPE" << '\n';
-        fout << id << '\n';
-        fout << namePipe << '\n';
-        fout << length << '\n';
-        fout << diameter << '\n';
-        fout << InRepairs << '\n';
+        fout << "PIPE\n";
+        fout << namePipe << endl;
+        fout << length << endl;
+        fout << diameter << endl;
+        fout << InRepairs << endl;
     }
 }
 
-std::istream& operator >> (std::istream& in, PipeLine& pipe)
-{
-    std::cout << "Type name pipe: ";
-    Save(in, pipe.namePipe);
-    std::cout << "Type pipe length: ";
-    pipe.length = CorrectInput(0.0, 2000.0);
-    std::cout << "Type pipe diameter: ";
-    pipe.diameter = CorrectInput(0.0, 2000.0);
-    std::cout << "Pipe under repair? ";
-    pipe.InRepairs = CorrectInput(0, 1);
-    return in;
-}
-
-std::ostream& operator << (std::ostream& out, const PipeLine& pipe)
-{
-    out << "Pipe\n" << "ID: " << pipe.id
-        << "\tName: " << pipe.namePipe
-        << "\tLength: " << pipe.length
-        << "\tDiameter: " << pipe.diameter
-        << "\tIn Repairs: " << pipe.InRepairs;
-    return out;
-}
+//std::istream& operator >> (std::istream& in, PipeLine& pipe)
+//{
+//    std::cout << "Type name pipe: ";
+//    Save(in, pipe.namePipe);
+//    std::cout << "Type pipe length: ";
+//    pipe.length = CorrectInput(0.0, 2000.0);
+//    std::cout << "Type pipe diameter: ";
+//    pipe.diameter = CorrectInput(0.0, 2000.0);
+//    std::cout << "Pipe under repair? ";
+//    pipe.InRepairs = CorrectInput(0, 1);
+//    return in;
+//}
+//
+//std::ostream& operator << (std::ostream& out, const PipeLine& pipe)
+//{
+//    out << "Pipe\n" << "ID: " << pipe.id
+//        << "\tName: " << pipe.namePipe
+//        << "\tLength: " << pipe.length
+//        << "\tDiameter: " << pipe.diameter
+//        << "\tIn Repairs: " << pipe.InRepairs;
+//    return out;
+//}
 //редактирование трубы
 void PipeLine::EditPipe() {
     InRepairs = !(InRepairs);

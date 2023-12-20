@@ -7,8 +7,8 @@ void paddCS(unordered_map<int, CompressorStation>& stations, CompressorStation n
     CompressorStation::ID++;
 }
 void paddPipe(unordered_map<int, PipeLine>& pipes, PipeLine& newPipe) {
-    pipes.insert(pair<int, PipeLine>(PipeLine::ID, newPipe));
-    PipeLine::ID++;
+    pipes.insert(pair<int, PipeLine>(PipeLine::PipeID, newPipe));
+    PipeLine::PipeID++;
 }
 
 unordered_map<int, CompressorStation> netWork::getCS()
@@ -39,16 +39,15 @@ void netWork::printAllObj()
 {
     if (pipes.size() == 0) cout << "Input or load pipe to print" << endl;
     for (auto& [key, p] : pipes) {
-        cout << "\nPIPE information" << endl;
+        cout << "PIPE" << endl;
         p.printPipe();
     }
     if (stations.size() == 0) cout << "Input or load CS to print" << endl;
     for (auto& [key, cs] : stations) {
-        cout << "\nCS information" << endl;
+        cout << "CS" << endl;
         cs.printCS();
     }
 }
-
 
 
 void netWork::editPipe(vector<int> res)
@@ -67,11 +66,11 @@ void netWork::editCS(vector<int> res)
 
 void netWork::loadFromFile(ifstream& fin)
 {
-    string marker;
+    /*string marker;
     bool flagP = 0, flagCS = 0;
     pipes.erase(pipes.begin(), pipes.end());
     stations.erase(stations.begin(), stations.end());
-    PipeLine::ID = 1;
+    PipeLine::PipeID = 1;
     CompressorStation::ID = 1;
     if (fin.is_open()) {
         while (!fin.eof() && marker != "G") {
@@ -94,6 +93,24 @@ void netWork::loadFromFile(ifstream& fin)
     }
     else {
         cout << "Error! The file does not exist" << endl;
+    }*/
+    string marker;
+    pipes.clear();
+    stations.clear();
+    PipeLine::Reset();
+    CompressorStation::Reset();
+
+    while (fin >> marker) {
+        if (marker == "PIPE") {
+            PipeLine newPipe;
+            newPipe.loadPipe(fin);
+            pipes[newPipe.getPipeID()] = newPipe;
+        }
+        else if (marker == "CS") {
+            CompressorStation newCS;
+            newCS.loadCS(fin);
+            stations[newCS.getStationID()] = newCS;
+        }
     }
 }
 

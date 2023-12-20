@@ -4,15 +4,21 @@
 #include "utils.h"
 
 int CompressorStation::ID = 1;
-void CompressorStation::Reset()
-{
-	ID = 0;
-}
+//void CompressorStation::Reset()
+//{
+//	ID = 0;
+//}
 
 
 CompressorStation::CompressorStation()
 {
-	id = ++ID;
+	/*if (ID <= id) {
+        id = ++ID;
+    } else {
+        id = ID;
+    }*/
+
+	id = 0;
 	nameCompressorStation = "Unknown";
 	numberWorkshop = 1;
 	numberWorkshopJob = 0;
@@ -30,28 +36,28 @@ int CompressorStation::getNumberWorkshop() const
 }
 
 
-std::istream& operator >> (std::istream& in, CompressorStation& station)
-{
-	cout << "Type name compressor station: ";
-	Save(in, station.nameCompressorStation);
-	cout << "Type number Workshop: ";
-	station.numberWorkshop = CorrectInput(1, 100);
-	cout << "Type number Workshop in job: ";
-	station.numberWorkshopJob = CorrectInput(0, station.numberWorkshop);
-	cout << "Type station performance: ";
-	station.performance = CorrectInput(1, 100);
-	return in;
-}
-
-std::ostream& operator << (std::ostream& out, const CompressorStation& station)
-{
-	out << "CS\n" << "ID: " << station.id
-		<< "\tName: " << station.nameCompressorStation
-		<< "\tWorkshops: " << station.numberWorkshop
-		<< "\tWorkshops in Job: " << station.numberWorkshopJob
-		<< "\tPerformance: " << station.performance << endl;
-	return out;
-}
+//std::istream& operator >> (std::istream& in, CompressorStation& station)
+//{
+//	cout << "Type name compressor station: ";
+//	Save(in, station.nameCompressorStation);
+//	cout << "Type number Workshop: ";
+//	station.numberWorkshop = CorrectInput(1, 100);
+//	cout << "Type number Workshop in job: ";
+//	station.numberWorkshopJob = CorrectInput(0, station.numberWorkshop);
+//	cout << "Type station performance: ";
+//	station.performance = CorrectInput(1, 100);
+//	return in;
+//}
+//
+//std::ostream& operator << (std::ostream& out, const CompressorStation& station)
+//{
+//	out << "CS\n" << "ID: " << station.id
+//		<< "\tName: " << station.nameCompressorStation
+//		<< "\tWorkshops: " << station.numberWorkshop
+//		<< "\tWorkshops in Job: " << station.numberWorkshopJob
+//		<< "\tPerformance: " << station.performance << endl;
+//	return out;
+//}
 
 bool checkNumWSinOperation(int checkValue, int numWS) {
 	if ((checkValue > numWS) || (checkValue < 0)) return 1;
@@ -61,13 +67,13 @@ bool checkNumWSinOperation(int checkValue, int numWS) {
 
 void CompressorStation::addCS() {
 	id = ID;
-	cout << "Enter the name of the CS:";
+	cout << "Type name compressor station: ";
 	cin >> ws;
 	getline(cin, nameCompressorStation);
 	cerr << nameCompressorStation << endl;
-	cout << "Enter the number of WS:";
+	cout << "Type number Workshop: ";
 	numberWorkshop = inputT(1);
-	cout << "Enter the WS in operation:";
+	cout << "Type number Workshop in job: ";
 	numberWorkshopJob = inputT(1);
 
 	while (1) {
@@ -77,37 +83,36 @@ void CompressorStation::addCS() {
 		}
 		else break;
 	}
-	cout << "Enter efficiency:";
+	cout << "EType station performance: ";
 	performance = inputT(0.0);
 }
-//Âûâîä ÊÑ íà êîíñîëü
+
 void CompressorStation::printCS()
 {
 	if (nameCompressorStation == "") cout << "Input or load data to print" << endl;
 	else {
-		cout << "id: " << getStationID() << endl;
-		cout << "name: " << nameCompressorStation << endl;
-		cout << "number of WS: " << numberWorkshop << endl;
-		cout << "WS in operation: " << numberWorkshopJob << endl;
-		cout << "efficiency: " << performance << endl;
+		cout << "ID: " << getStationID() << endl;
+		cout << "Name CS: " << nameCompressorStation << endl;
+		cout << "Number Workshop: " << numberWorkshop << endl;
+		cout << "Number Workshop in Job: " << numberWorkshopJob << endl;
+		cout << "Performance: " << performance << endl;
 	}
 }
 
 void CompressorStation::loadCS(ifstream& fin) {
-	if (fin.is_open()) {
 		id = ID;
 		fin >> ws;
 		getline(fin, nameCompressorStation);
 		fin >> numberWorkshop;
 		fin >> numberWorkshopJob;
 		fin >> performance;
-	}
+		/*ID = max(ID, id + 1);*/
+		fin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void CompressorStation::saveCS(ofstream& fout) {
 	if (fout.is_open()) {
 		fout << "CS" << '\n';
-		fout << id << '\n';
 		fout << nameCompressorStation << '\n';
 		fout << numberWorkshop << '\n';
 		fout << numberWorkshopJob << '\n';

@@ -19,11 +19,11 @@ bool CheckID(const unordered_map<int, type>& x, const int& id)
     return (x.find(id) != x.end());
 }
 
-void PrintFoundPipes(const int& id, const unordered_map<int, PipeLine>& pipes) {
-    if (pipes.find(id) != pipes.end()) {
-        cout << "Pipe ID: " << id << " " << pipes.at(id) << std::endl; // Предполагается, что у PipeLine есть оператор вывода
-    }
-}
+//void PrintFoundPipes(const int& id, const unordered_map<int, PipeLine>& pipes) {
+//    if (pipes.find(id) != pipes.end()) {
+//        cout << "Pipe ID: " << id << " " << pipes.at(id) << endl;
+//    }
+//}
 //проверка ID
 int CorrectIntID() {
     int id;
@@ -82,32 +82,32 @@ bool CheckByRepair(const PipeLine& pipe, bool param) {
     return (pipe.InRepairs == param);
 }
 
-
-void FindPipeLine(const unordered_map<int, PipeLine>& pipes) {
-    cout << "Type '1' - search by name, '2' - by repair" << endl;
-    int choice;
-    cin >> choice;
-
-    if (choice == 1)
-    {
-        string namePipe;
-        cout << "Input pileline name for searching: ";
-        cin.ignore();
-        getline(cin, namePipe);
-        for (int id : FindPipelinesByFilter<string>(pipes, CheckByName, namePipe)) {
-            cout << pipes.at(id) << endl;
-        }
-    }
-    else if (choice == 2)
-    {
-        cout << "type pipeline status for searching: ";
-        bool flag;
-        cin >> flag;
-        for (int id : FindPipelinesByFilter<bool>(pipes, CheckByRepair, flag)) {
-            cout << pipes.at(id) << endl;
-        }
-    }
-}
+//
+//void FindPipeLine(const unordered_map<int, PipeLine>& pipes) {
+//    cout << "Type '1' - search by name, '2' - by repair" << endl;
+//    int choice;
+//    cin >> choice;
+//
+//    if (choice == 1)
+//    {
+//        string namePipe;
+//        cout << "Input pileline name for searching: ";
+//        cin.ignore();
+//        getline(cin, namePipe);
+//        for (int id : FindPipelinesByFilter<string>(pipes, CheckByName, namePipe)) {
+//            cout << pipes.at(id) << endl;
+//        }
+//    }
+//    else if (choice == 2)
+//    {
+//        cout << "type pipeline status for searching: ";
+//        bool flag;
+//        cin >> flag;
+//        for (int id : FindPipelinesByFilter<bool>(pipes, CheckByRepair, flag)) {
+//            cout << pipes.at(id) << endl;
+//        }
+//    }
+//}
 
 
 
@@ -137,31 +137,31 @@ bool CheckByUnworkingWorkshops(const CompressorStation& station, double param) {
     return (double(((station.getNumberWorkshop() - station.numberWorkshopJob) / station.getNumberWorkshop()) * 100)) >= param;
 }
 
-void FindCS(const unordered_map<int, CompressorStation>& stations) {
-    cout << "Type '1' - search by name, '2' - by repair status NOT IN JOB" << endl;
-    int choice;
-    std::cin >> choice;
-
-    if (choice == 1)
-    {
-        string nameCompressorStation;
-        cout << "Input CS name for searching: ";
-        cin.ignore();
-        getline(cin, nameCompressorStation);
-        for (int id : FindStationsByFilter<string>(stations, CheckByNameCS, nameCompressorStation)) {
-            cout << stations.at(id) << endl;
-        }
-    }
-    else if (choice == 2)
-    {
-        cout << "Input percent of unworking stations for searching: ";
-        double percent;
-        cin >> percent;
-        for (int id : FindStationsByFilter<double>(stations, CheckByUnworkingWorkshops, percent)) {
-            cout << stations.at(id) << endl;
-        }
-    }
-}
+//void FindCS(const unordered_map<int, CompressorStation>& stations) {
+//    cout << "Type '1' - search by name, '2' - by repair status NOT IN JOB" << endl;
+//    int choice;
+//    std::cin >> choice;
+//
+//    if (choice == 1)
+//    {
+//        string nameCompressorStation;
+//        cout << "Input CS name for searching: ";
+//        cin.ignore();
+//        getline(cin, nameCompressorStation);
+//        for (int id : FindStationsByFilter<string>(stations, CheckByNameCS, nameCompressorStation)) {
+//            cout << stations.at(id) << endl;
+//        }
+//    }
+//    else if (choice == 2)
+//    {
+//        cout << "Input percent of unworking stations for searching: ";
+//        double percent;
+//        cin >> percent;
+//        for (int id : FindStationsByFilter<double>(stations, CheckByUnworkingWorkshops, percent)) {
+//            cout << stations.at(id) << endl;
+//        }
+//    }
+//}
 
 template <typename type>
 unordered_set<int> FindPipeByFilter(const unordered_map<int, PipeLine>& pipes,  type param) {
@@ -223,13 +223,13 @@ vector<int> findCSbyPer(netWork& newNetWork, int per) {
 void editPipeByName(netWork& newNetWork) {
 
     string nameToSearch;
-    cout << "Enter name to search for pipes: ";
+    cout << "Type name pipe to search: ";
     cin >> ws;
     getline(cin, nameToSearch);
     cerr << nameToSearch << endl;
     vector<int> res = findPipebyName(newNetWork, nameToSearch);
     if (res.size() == 0) {
-        cout << "There are no pipes with this name.\n";
+        cout << "No pipes with this name.\n";
         return;
     }
     newNetWork.editPipe(res);
@@ -237,37 +237,37 @@ void editPipeByName(netWork& newNetWork) {
 
 void editPipeByRepair(netWork& newNetWork) {
     bool state;
-    cout << "Enter repair state to search for pipes: ";
+    cout << "Type repair state to search for pipes: ";
     state = inputT(true);
     vector<int> res = findPipebyRepair(newNetWork, state);
     if (res.size() == 0) {
-        cout << "There are no pipes with this repair state.\n";
+        cout << "No pipes with this repair state.\n";
         return;
     }
     newNetWork.editPipe(res);
 }
 
 void editCSByName(netWork& newNetWork) {
-    cout << "Enter name to search for CS: ";
+    cout << "Type name CS to search: ";
     string nameToSearch;
     cin >> ws;
     getline(cin, nameToSearch);
     cerr << nameToSearch << endl;
     vector<int> res = findCSbyName(newNetWork, nameToSearch);
     if (res.size() == 0) {
-        cout << "There are no CS with this name.\n";
+        cout << "No CS with this name.\n";
         return;
     }
     newNetWork.editCS(res);
 }
 
 void editCSByPer(netWork& newNetWork) {
-    cout << "Enter persent to search for pipes: ";
+    cout << "Type persent to search for pipes: ";
     int per;
     per = inputT(1);
     vector<int> res = findCSbyPer(newNetWork, per);
     if (res.size() == 0) {
-        cout << "There are no CS with this percent.\n";
+        cout << "No CS with this percent.\n";
         return;
     }
     newNetWork.editCS(res);
@@ -276,7 +276,7 @@ void editCSByPer(netWork& newNetWork) {
 void editPipe(netWork& newNetWork) {
     if (newNetWork.getPipe().size() != 0) {
 
-        cout << "Enter 0 to search by name or 1 to search by repair: ";
+        cout << "Type 0 to search by name or 1 to search by repair: ";
         bool field = inputT(true);
         if (field == 0) {
             editPipeByName(newNetWork);
@@ -331,10 +331,6 @@ void FindMenu() {
         << "Enter a number from 1 to 2: ";
 }
 
-//void PrintFoundPipes(const int& id, unordered_map<int, PipeLine>& pipes) {
-//    cout << pipes[id];
-//}
-
 void EditMenu() {
     cout << "1. Select pipelines by ID" << endl
         << "2. Edit all found pipelines" << endl
@@ -349,56 +345,54 @@ void EditPipeline(unordered_map<int, PipeLine>& pipes, const int& id) {
 }
 
 
-unordered_set<int> PackEdit(netWork& newNetWork) {
-    unordered_set<int> pipesID{};
-    FindMenu();
-    switch (CorrectInput(1, 2)) {
-    case 1: {
-        string name;
-        cout << "Input pileline name for searching: ";
-        Save(cin, name);
-        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByName, name)) {
-            cout << newNetWork.getPipe()[id];
-            //PrintFoundPipes(id, pipes);
-            pipesID.insert(id);
-        }
-        break;
-    }
-    case 2: {
-        bool flag;
-        cout << "Input station status for searching: ";
-        flag = CorrectInput(false, true);
-        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByRepair, flag)) {
-            cout << newNetWork.getPipe()[id];
-            //PrintFoundPipes(id, pipes);
-            pipesID.insert(id);
-        }
-        break;
-    }
-    }
-    return pipesID;
-}
-unordered_set<int> SelectPipesID(netWork& newNetWork) {
-    unordered_set<int> pipesID;
-    while (1) {
-        cout << "Input ID of pipeline or 0 to complete: ";
-        int id;
-        id = CorrectIntID();
-        if (id) {
-            if (CheckID(newNetWork.getPipe(), id)) {
-                cout << newNetWork.getPipe()[id];
-                pipesID.insert(id);
-            }
-            else {
-                cout << "No pipeline with such ID" << endl;
-            }
-        }
-        else {
-            break;
-        }
-    }
-    return pipesID;
-}
+//unordered_set<int> PackEdit(netWork& newNetWork) {
+//    unordered_set<int> pipesID{};
+//    FindMenu();
+//    switch (CorrectInput(1, 2)) {
+//    case 1: {
+//        string name;
+//        cout << "Type pileline name for searching: ";
+//        Save(cin, name);
+//        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByName, name)) {
+//            cout << newNetWork.getPipe()[id];
+//            pipesID.insert(id);
+//        }
+//        break;
+//    }
+//    case 2: {
+//        bool flag;
+//        cout << "Input station status for searching: ";
+//        flag = CorrectInput(false, true);
+//        for (int id : FindPipelinesByFilter(newNetWork.getPipe(), CheckByRepair, flag)) {
+//            cout << newNetWork.getPipe()[id];
+//            pipesID.insert(id);
+//        }
+//        break;
+//    }
+//    }
+//    return pipesID;
+//}
+//unordered_set<int> SelectPipesID(netWork& newNetWork) {
+//    unordered_set<int> pipesID;
+//    while (1) {
+//        cout << "Input ID of pipeline or 0 to complete: ";
+//        int id;
+//        id = CorrectIntID();
+//        if (id) {
+//            if (CheckID(newNetWork.getPipe(), id)) {
+//                cout << newNetWork.getPipe()[id];
+//                pipesID.insert(id);
+//            }
+//            else {
+//                cout << "No pipeline with such ID" << endl;
+//            }
+//        }
+//        else {
+//            break;
+//        }
+//    }
+//    return pipesID;
+//}
 
 bool checkPipeD(int diameter) {
     switch (diameter) {
@@ -415,7 +409,7 @@ bool checkPipeD(int diameter) {
         return 1;
     }
     default:
-        cout << "Invalid diameter\n Try again: ";
+        cout << "Invalid diameter\n Try agai[8n: ";
         return 0;
     }
 }
@@ -432,45 +426,18 @@ int inputValue() {
             cerr << state << endl;
             return state;
         }
-        else cout << "enter value more than 0: ";
+        else cout << "Enter value more than 0: ";
     }
     cerr << state << endl;
     return state;
 }
 
 
-//---------------------------ЗАПРОС ВВОДА ПАРАМЕТРОВ ДЛЯ ГРАФА------------------------------//
-//void requestForParameters(int& IDEntry, int& IDExit, int& diam, netWork& newNetWork) {
-//    while (1) {
-//        cout << "Enter the CS entry ID or enter -1 to create a CS: ";
-//        IDEntry = inputValue();
-//        if (IDEntry == -1)
-//        {
-//            newNetWork.addCS();
-//            IDEntry = newNetWork.getCS()[newNetWork.getCS().rbegin()->first].getStationID();
-//        }
-//        cout << "Enter the CS exit ID: ";
-//        IDExit = inputT(1);
-//        if (newNetWork.getCS().contains(IDEntry) && newNetWork.getCS().contains(IDExit) && IDEntry != IDExit)
-//            break;
-//        cout << "There are no such IDs. Enter another ID\n";
-//    }
-//    cout << "Enter diametr of pipe: ";
-//    diam = inputT(1);
-//    while (1) {
-//        if (!checkPipeD(diam)) {
-//            diam = inputT(1);
-//        }
-//        else break;
-//    }
-//}
-//топологическая сортировка
-
 void SaveToFile(netWork& newNetWork, unordered_map<int, edge>& graphG) {
     if (newNetWork.getPipe().size() == 0 && newNetWork.getCS().size() == 0) cout << "Input or load data to save" << endl;
     else {
         string FILENAME;
-        cout << "Enter name of file to save:";
+        cout << "Type name of file to save:";
         cin >> FILENAME;
         cerr << FILENAME << endl;
         ofstream fout(FILENAME);
@@ -489,7 +456,7 @@ void SaveToFile(netWork& newNetWork, unordered_map<int, edge>& graphG) {
 void loadFromFile(netWork& newNetWork, vector<int>& usedPipe, unordered_map<int, edge>& graphG) {
     string FILENAME;
     string marker;
-    cout << "Enter name of file to load:";
+    cout << "Type name of file to load:";
     cin >> FILENAME;
     cerr << FILENAME << endl;
     ifstream fin(FILENAME);
@@ -551,23 +518,7 @@ int SelectCS(netWork& newNetWork) {
         cout << "enter correct number: ";
     }
 }
-//int inputValue() {
-//    int state;
-//    while (true) {
-//        if (!(cin >> state)) {
-//            cin.clear();
-//            cin.ignore(1000, '\n');
-//            cout << "Try again: ";
-//        }
-//        else if (state >= 1 || state == -1) {
-//            cerr << state << endl;
-//            return state;
-//        }
-//        else cout << "enter value more than 0: ";
-//    }
-//    cerr << state << endl;
-//    return state;
-//}
+
 
 void requestForParameters(int& IDEntry, int& IDExit, int& diameter, netWork& newNetWork) {
     while (1) {
@@ -586,10 +537,10 @@ void requestForParameters(int& IDEntry, int& IDExit, int& diameter, netWork& new
             break;
         cout << "There are no such IDs. Enter another ID\n";
     }
-    cout << "Enter diametr of pipe: ";
+    cout << "Tydiameter of pipe: ";
     diameter = inputT(1);
     while (1) {
-        if (!checkPipeD(diameter)) {
+        if (!(checkPipeD(diameter))) {
             diameter= inputT(1);
         }
         else break;
@@ -677,41 +628,25 @@ int main()
     vector <int> usedPipe;
     vector <int> deletedCS;
     netWork newNetWork;
-    /*unordered_map<int, PipeLine> pipes;
-    unordered_map<int, CompressorStation> stations;*/
 
     while (1)
     {
         PrintMenu();
-        int i = CorrectInput(0, 14);
+        int i = CorrectInput(0, 12);
         switch (i)
-        //switch (CorrectInput(0, 12))
         {
         case 1:
         {
-            //PipeLine pipe; //location 
-            //cin >> pipe;
-            //pipes.insert({ pipe.getPipeID(), pipe });
             newNetWork.addPipe();
             break;
         }
         case 2:
         {
-            /*CompressorStation station;
-            cin >> station;*/
-            //stations.insert({station.getStationID(), station});
             newNetWork.addCS();
             break;
         }
         case 3:
         {
-            /*for (auto& i : pipes) {
-                cout << i.second << endl;
-            }
-            for (auto& i : stations) {
-                cout << i.second << endl;
-            }
-            break;*/
             newNetWork.printAllObj();
             for (auto const& edge : graphG) {
                 graphG[edge.first].printEdge();
@@ -731,49 +666,11 @@ int main()
         }
         case 6:
         {
-            /*cout << "Type name fail: ";
-            string in_file;
-            cin >> in_file;
-            ofstream fout(in_file);
-            if (pipes.empty()) {
-                cout << "no pipe" << endl;
-            }
-            if (stations.empty()) {
-                cout << "no CS" << endl;
-            }
-            for (auto const& pipe : pipes) {
-                if (!pipe.second.namePipe.size()) {
-                    pipes[pipe.first].savePipe(fout);
-                }
-            }
-            for (auto const& cs : stations) {
-                if (!cs.second.nameCompressorStation.size()) {
-                    stations[cs.first].saveCS(fout);
-                }
-            }*/
             SaveToFile(newNetWork, graphG);
             break;
         }
         case 7:
         {
-            /*cout << "Type name fail: ";
-            string read_file;
-            cin >> read_file;
-            ifstream read(read_file);
-            string marker;
-            while (getline(read, marker)) {
-                if (marker == "PIPE") {
-                    PipeLine read_pipe;
-                    read_pipe.loadPipe(read);
-                    pipes.insert({ read_pipe.getPipeID(), read_pipe });
-                }
-                if (marker == "CS") {
-                    CompressorStation read_ks;
-                    read_ks.loadCS(read);
-                    stations.insert({ read_ks.getStationID(), read_ks });
-                }
-             
-            }*/
             loadFromFile(newNetWork, usedPipe, graphG);
             break;
         }

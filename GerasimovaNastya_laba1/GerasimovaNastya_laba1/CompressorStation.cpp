@@ -4,20 +4,14 @@
 #include "utils.h"
 
 int CompressorStation::ID = 1;
-//void CompressorStation::Reset()
-//{
-//	ID = 0;
-//}
+void CompressorStation::Reset()
+{
+	ID = 0;
+}
 
 
 CompressorStation::CompressorStation()
 {
-	/*if (ID <= id) {
-        id = ++ID;
-    } else {
-        id = ID;
-    }*/
-
 	id = 0;
 	nameCompressorStation = "Unknown";
 	numberWorkshop = 1;
@@ -100,23 +94,21 @@ void CompressorStation::printCS()
 }
 
 void CompressorStation::loadCS(ifstream& fin) {
-		id = ID;
-		fin >> ws;
-		getline(fin, nameCompressorStation);
-		fin >> numberWorkshop;
-		fin >> numberWorkshopJob;
-		fin >> performance;
-		/*ID = max(ID, id + 1);*/
-		fin.ignore(numeric_limits<streamsize>::max(), '\n');
+	id = ID;
+	fin >> ws;
+	getline(fin, nameCompressorStation);
+	fin >> numberWorkshop;
+	fin >> numberWorkshopJob;
+	fin >> performance;
 }
 
 void CompressorStation::saveCS(ofstream& fout) {
 	if (fout.is_open()) {
-		fout << "CS" << '\n';
+		fout << "\nCS" << '\n';
 		fout << nameCompressorStation << '\n';
 		fout << numberWorkshop << '\n';
 		fout << numberWorkshopJob << '\n';
-		fout << performance << '\n';
+		fout << performance;
 	}
 }
 

@@ -32,6 +32,7 @@ void netWork::addCS()
 {
     CompressorStation newCS;
     newCS.addCS();
+    //stations.insert(make_pair(newCS.getStationID(), newCS));
     paddCS(stations, newCS);
 }
 
@@ -50,23 +51,36 @@ void netWork::printAllObj()
 }
 
 
-void netWork::editPipe(vector<int> res)
+//void netWork::editPipe(vector<int> res)
+//{
+//    for (int i = 0; i < res.size(); i++) {
+//        pipes[res[i]].EditPipe();
+//    }
+//}
+
+void netWork::editPipe(int id)
 {
-    for (int i = 0; i < res.size(); i++) {
-        pipes[res[i]].EditPipe();
+    for (auto& i :pipes) {
+        if (i.first == id) i.second.EditPipe();
     }
 }
 
-void netWork::editCS(vector<int> res)
+//void netWork::editCS(vector<int> res)
+//{
+//    for (int i = 0; i < res.size(); i++) {
+//        stations[res[i]].EditCS();
+//    }
+//}
+
+void netWork::editCS(int id)
 {
-    for (int i = 0; i < res.size(); i++) {
-        stations[res[i]].EditCS();
+    for (auto& i : stations) {
+        if (i.first == id) i.second.EditCS();
     }
 }
-
 void netWork::loadFromFile(ifstream& fin)
 {
-    /*string marker;
+    string marker;
     bool flagP = 0, flagCS = 0;
     pipes.erase(pipes.begin(), pipes.end());
     stations.erase(stations.begin(), stations.end());
@@ -93,26 +107,10 @@ void netWork::loadFromFile(ifstream& fin)
     }
     else {
         cout << "Error! The file does not exist" << endl;
-    }*/
-    string marker;
-    pipes.clear();
-    stations.clear();
-    PipeLine::Reset();
-    CompressorStation::Reset();
-
-    while (fin >> marker) {
-        if (marker == "PIPE") {
-            PipeLine newPipe;
-            newPipe.loadPipe(fin);
-            pipes[newPipe.getPipeID()] = newPipe;
-        }
-        else if (marker == "CS") {
-            CompressorStation newCS;
-            newCS.loadCS(fin);
-            stations[newCS.getStationID()] = newCS;
-        }
     }
+    
 }
+
 
 void netWork::saveToFile(ofstream& fout)
 {
@@ -141,3 +139,4 @@ void netWork::deleteCS(int index)
 {
     stations.erase(index);
 }
+

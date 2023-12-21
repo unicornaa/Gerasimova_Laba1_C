@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "PipeLine.h"
 #include "CompressorStation.h"
-#include <unordered_set>
+#include <vector>
 
 class netWork
 {
@@ -16,8 +16,8 @@ public:
 	void addPipe();
 	void addCS();
 	void printAllObj();
-	void editPipe(vector<int> res);
-	void editCS(vector<int> res);
+	void editPipe(int id);
+	void editCS(int id);
 	void loadFromFile(ifstream& fin);
 	void saveToFile(ofstream& fout);
 	void deletePipe(int index);

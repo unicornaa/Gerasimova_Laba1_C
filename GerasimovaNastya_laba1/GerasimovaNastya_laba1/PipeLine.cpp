@@ -5,19 +5,18 @@
 
 int PipeLine::PipeID = 1;
 
-//void PipeLine::Reset()
-//{
-//    PipeID = 0;
-//}
+int PipeLine::getPipeID() const
+{
+    return id;
+}
+
+void PipeLine::Reset()
+{
+    PipeID = 0;
+}
 
 PipeLine::PipeLine()
 {
-    /*if (PipeID <= id) {
-        id = ++PipeID;
-    }
-    else {
-        id = PipeID;
-    }*/
     id = 0;
     namePipe = "Unknown";
     length = 0.1;
@@ -25,10 +24,6 @@ PipeLine::PipeLine()
     InRepairs = 0;
 }
 
-int PipeLine::getPipeID() const
-{
-    return id;
-}
 
 int PipeLine::getDiameter() const
 {
@@ -89,25 +84,25 @@ void PipeLine::printPipe()
 }
 
 void PipeLine::loadPipe(ifstream& fin) {
-    if (fin.is_open()) {
+
         id = PipeID;
         fin >> ws;
         getline(fin, namePipe);
         fin >> length;
         fin >> diameter;
         fin >> InRepairs;
-        fin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
+    
 }
 
 
 void PipeLine::savePipe(ofstream& fout) {
     if (fout.is_open()) {
-        fout << "PIPE\n";
+        fout << "\nPIPE\n";
+        //fout << id << '\n';
         fout << namePipe << endl;
         fout << length << endl;
         fout << diameter << endl;
-        fout << InRepairs << endl;
+        fout << InRepairs;
     }
 }
 

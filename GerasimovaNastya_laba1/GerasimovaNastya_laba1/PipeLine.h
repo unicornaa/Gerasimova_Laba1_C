@@ -9,7 +9,7 @@ class PipeLine
     double length;
     int diameter;
 public:
-    //static void Reset();
+    static void Reset();
     static int PipeID;
     std::string namePipe;
     
@@ -22,7 +22,7 @@ public:
     
 
     PipeLine();
-
+    
     int getPipeID() const;
     int getDiameter() const;
 

@@ -7,11 +7,11 @@
 using namespace std;
 int edge::maxIdG = 0;
 
-void edge::addEdge(int begin, int end, PipeLine& pipe)
+void edge::addEdge(int end, int begin, PipeLine& pipe)
 {
     id = maxIdG;
-    IDExit = begin;
-    IDEntry = end;
+    IDExit = end;
+    IDEntry = begin;
     ID = pipe.getPipeID();
     diameter = pipe.getDiameter();
     maxIdG++;
@@ -21,23 +21,23 @@ void edge::printEdge()
 {
     cout << "\nEdge" << endl;
     cout << "ID: " << id << endl;
-    cout << "IDExit: " << IDExit << endl;
     cout << "IDEntry: " << IDEntry << endl;
+    cout << "IDExit: " << IDExit << endl;
     cout << "Pipe ID: " << ID << endl;
     cout << "diameter: " << diameter << endl;
 }
 
 void edge::saveEdge(ofstream& fout) {
     if (fout.is_open()) {
-        fout << IDExit << endl << IDEntry
+        fout << IDEntry << endl << IDExit
             << endl << ID << endl << diameter;
     }
 
 }
 void edge::loadEdge(ifstream& fin) {
     id = maxIdG;
-    fin >> IDExit;
     fin >> IDEntry;
+    fin >> IDExit;
     fin >> ID;
     fin >> diameter;
 }

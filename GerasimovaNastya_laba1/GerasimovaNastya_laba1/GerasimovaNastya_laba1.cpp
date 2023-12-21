@@ -9,6 +9,7 @@
 #include "Graph.h"
 #include "netWork.h"
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -219,92 +220,102 @@ vector<int> findCSbyPer(netWork& newNetWork, int per) {
     return res;
 }
 
+//
+//void editPipeByName(netWork& newNetWork) {
+//
+//    string nameToSearch;
+//    cout << "Type name pipe to search: ";
+//    cin >> ws;
+//    getline(cin, nameToSearch);
+//    cerr << nameToSearch << endl;
+//    vector<int> res = findPipebyName(newNetWork, nameToSearch);
+//    if (res.size() == 0) {
+//        cout << "No pipes with this name.\n";
+//        return;
+//    }
+//    newNetWork.editPipe(res);
+//}
 
-void editPipeByName(netWork& newNetWork) {
 
-    string nameToSearch;
-    cout << "Type name pipe to search: ";
-    cin >> ws;
-    getline(cin, nameToSearch);
-    cerr << nameToSearch << endl;
-    vector<int> res = findPipebyName(newNetWork, nameToSearch);
-    if (res.size() == 0) {
-        cout << "No pipes with this name.\n";
-        return;
-    }
-    newNetWork.editPipe(res);
-}
 
-void editPipeByRepair(netWork& newNetWork) {
-    bool state;
-    cout << "Type repair state to search for pipes: ";
-    state = inputT(true);
-    vector<int> res = findPipebyRepair(newNetWork, state);
-    if (res.size() == 0) {
+//void editCSByName(netWork& newNetWork) {
+//    cout << "Type name CS to search: ";
+//    string nameToSearch;
+//    cin >> ws;
+//    getline(cin, nameToSearch);
+//    cerr << nameToSearch << endl;
+//    vector<int> res = findCSbyName(newNetWork, nameToSearch);
+//    if (res.size() == 0) {
+//        cout << "No CS with this name.\n";
+//        return;
+//    }
+//    newNetWork.editCS(res);
+//}
+
+//void editCSByPer(netWork& newNetWork) {
+//    cout << "Type persent to search for pipes: ";
+//    int per;
+//    per = inputT(1);
+//    vector<int> res = findCSbyPer(newNetWork, per);
+//    if (res.size() == 0) {
+//        cout << "No CS with this percent.\n";
+//        return;
+//    }
+//    newNetWork.editCS(res);
+//}
+
+//void editPipe(netWork& newNetWork) {
+//    if (newNetWork.getPipe().size() != 0) {
+//        editPipeByRepair(newNetWork);
+//    }
+//    else {
+//        cout << "Input or load pipe data to edit" << endl;
+//    }
+//}
+
+//void editPipeByRepair(netWork& newNetWork) {
+//    bool state;
+//    cout << "Type repair state to search for pipes: ";
+//    state = inputT(true);
+//    vector<int> res = findPipebyRepair(newNetWork, state);
+//    if (res.size() == 0) {
+//        cout << "No pipes with this repair state.\n";
+//        return;
+//    }
+//    newNetWork.editPipe(res);
+//}
+// 
+
+//редактирование трубы
+void editPipe(netWork& newNetWork) {
+    cout << "Type pipeline ID for editing: ";
+    int id;
+    id = CorrectIntID();
+    /*vector<int> res = findPipebyRepair(newNetWork, id);*/
+    /*if (newNetWork.getPipe().size() != 0) {
         cout << "No pipes with this repair state.\n";
         return;
-    }
-    newNetWork.editPipe(res);
+    }*/
+    newNetWork.editPipe(id);
 }
 
-void editCSByName(netWork& newNetWork) {
-    cout << "Type name CS to search: ";
-    string nameToSearch;
-    cin >> ws;
-    getline(cin, nameToSearch);
-    cerr << nameToSearch << endl;
-    vector<int> res = findCSbyName(newNetWork, nameToSearch);
-    if (res.size() == 0) {
-        cout << "No CS with this name.\n";
-        return;
-    }
-    newNetWork.editCS(res);
-}
-
-void editCSByPer(netWork& newNetWork) {
-    cout << "Type persent to search for pipes: ";
-    int per;
-    per = inputT(1);
-    vector<int> res = findCSbyPer(newNetWork, per);
-    if (res.size() == 0) {
-        cout << "No CS with this percent.\n";
-        return;
-    }
-    newNetWork.editCS(res);
-}
-
-void editPipe(netWork& newNetWork) {
-    if (newNetWork.getPipe().size() != 0) {
-
-        cout << "Type 0 to search by name or 1 to search by repair: ";
-        bool field = inputT(true);
-        if (field == 0) {
-            editPipeByName(newNetWork);
-        }
-        else {
-            editPipeByRepair(newNetWork);
-        }
-    }
-    else {
-        cout << "Input or load pipe data to edit" << endl;
-    }
-}
-
+///редактирование станции
 void editCS(netWork& newNetWork) {
-    if (newNetWork.getCS().size() != 0) {
-        cout << "Enter 0 to search by name or 1 to search by percent: ";
-        bool field = inputT(true);
-        if (field == 0) {
-            editCSByName(newNetWork);
-        }
-        else {
-            editCSByPer(newNetWork);
-        }
-    }
-    else {
-        cout << "Input or load CS data to edit" << endl;
-    }
+    cout << "Type compressor station ID for editing: ";
+    int id;
+    id = CorrectIntID();
+    
+    newNetWork.editCS(id);
 }
+
+//void editCS(netWork& newNetWork) {
+//    if (newNetWork.getCS().size() != 0) {
+//        editCSByPer(newNetWork);
+//    }
+//    else {
+//        cout << "Input or load CS data to edit" << endl;
+//    }
+//}
 
 
 void PrintMenu() {
@@ -520,102 +531,172 @@ int SelectCS(netWork& newNetWork) {
 }
 
 
-void requestForParameters(int& IDEntry, int& IDExit, int& diameter, netWork& newNetWork) {
+
+void requestForParameters(int& IDEntry, int& IDExit, int& diam, netWork& newNetWork) {
     while (1) {
-        cout << "Enter the CS entry ID or enter -1 to create a CS: ";
+        cout << "Enter the CS exit ID: ";
         IDEntry = inputValue();
-        if (IDEntry == -1)
+        /*if (IDEntry == -1)
         {
             newNetWork.addCS();
-            IDEntry = newNetWork.getCS().begin()->second.getStationID();
-        }
-        cout << "Enter the CS exit ID: ";
+            IDEntry = newNetWork.getCS()[newNetWork.getCS().begin()->first].getStationID();
+        }*/
+        cout << "Enter the CS entry ID: ";
         IDExit = inputT(1);
-        if (newNetWork.getCS().find(IDEntry) != newNetWork.getCS().end() &&
-            newNetWork.getCS().find(IDExit) != newNetWork.getCS().end() &&
-            IDEntry != IDExit)
+        if (newNetWork.getCS().contains(IDEntry) && newNetWork.getCS().contains(IDExit) && IDEntry != IDExit)
             break;
         cout << "There are no such IDs. Enter another ID\n";
     }
-    cout << "Tydiameter of pipe: ";
-    diameter = inputT(1);
+    cout << "Enter diameter of pipe: ";
+    diam = inputT(1);
     while (1) {
-        if (!(checkPipeD(diameter))) {
-            diameter= inputT(1);
+        if (!checkPipeD(diam)) {
+            diam = inputT(1);
         }
         else break;
     }
 }
 
+
+//void requestForParameters(int& IDEntry, int& IDExit, int& diameter, netWork& newNetWork) {
+//    while (1) {
+//        cout << "Enter the CS entry ID or enter -1 to create a CS: ";
+//        IDEntry = inputValue();
+//
+//        if (IDEntry == -1) {
+//            newNetWork.addCS();  // Добавляем новую CS
+//            IDEntry = newNetWork.getCS().begin()->first; // Получаем ID последней добавленной CS
+//        }
+//
+//        cout << "Enter the CS exit ID: ";
+//        IDExit = inputValue();
+//
+//        // Проверяем, что оба ID существуют в сети и они не одинаковы
+//        if (newNetWork.getCS().find(IDEntry) != newNetWork.getCS().end() &&
+//            newNetWork.getCS().find(IDExit) != newNetWork.getCS().end() &&
+//            IDEntry != IDExit) {
+//            break;
+//        }
+//        else {
+//            cout << "There are no such IDs. Enter another ID\n";
+//        }
+//    }
+//
+//    cout << "Enter diameter of pipe: ";
+//    diameter = inputValue();
+//    while (!checkPipeD(diameter)) {
+//        cout << "Invalid diameter. Enter again: ";
+//        diameter = inputValue();
+//    }
+//}
+
+
+
+// Функция для топологической сортировки
+void topologicalSortUtil(int node, vector<bool>& visited, stack<int>& stack, vector<vector<int>>& graph) {
+    visited[node] = true;
+    for (int neighbor : graph[node])
+        if (!visited[neighbor])
+            topologicalSortUtil(neighbor, visited, stack, graph);
+    stack.push(node);
+}
+
+void topologicalSort(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<int>& resOfTop) {
+    visited[node] = true;
+
+    // Обходим всех соседей узла
+    for (int neighbor : graph[node]) {
+        if (!visited[neighbor]) {
+            topologicalSort(graph, neighbor, visited, resOfTop);
+        }
+    }
+
+    // Добавляем узел в результат после посещения всех его соседей
+    resOfTop.push_back(node);
+}
+
+
 bool hasCycleDFS(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<bool>& recursionStack) {
     visited[node] = true;
     recursionStack[node] = true;
 
+    // Проверяем всех соседей узла
     for (int neighbor : graph[node]) {
-        if (!visited[neighbor] && hasCycleDFS(graph, neighbor, visited, recursionStack)) {
-            return true;
+        if (!visited[neighbor]) {
+            if (hasCycleDFS(graph, neighbor, visited, recursionStack)) {
+                return true;
+            }
         }
         else if (recursionStack[neighbor]) {
+            // Найден цикл
             return true;
         }
     }
+
     recursionStack[node] = false;
     return false;
-}
-
-vector<vector<int>> createMatrix(unordered_map<int, edge>& graphG, int numNodes) {
-    vector<vector<int>> matrix(numNodes);
-    for (auto& [key, p] : graphG) {
-        matrix[p.IDExit - 1].push_back(p.IDEntry - 1);
-    }
-    return matrix;
 }
 
 bool hasCycle(vector<vector<int>>& graph, int numNodes) {
     vector<bool> visited(numNodes, false);
     vector<bool> recursionStack(numNodes, false);
 
+    // Проверяем каждый узел на наличие циклов
     for (int i = 0; i < numNodes; i++) {
-        if (!visited[i] && hasCycleDFS(graph, i, visited, recursionStack)) {
-            return true;
+        if (!visited[i]) {
+            if (hasCycleDFS(graph, i, visited, recursionStack)) {
+                return true;
+            }
         }
     }
+
     return false;
 }
 
-void topologicalSort(vector<vector<int>>& Graph, int node, vector<bool>& visited, vector<int>& recursionStack) {
-    visited[node] = true;
-    for (int neighbor : Graph[node])
-        if (!visited[neighbor])
-            topologicalSort(Graph, neighbor, visited, recursionStack);
-    recursionStack.push_back(node);
+
+
+vector<vector<int>> createMatrix(unordered_map<int, edge>& graphG, int numNodes) {
+    vector<vector<int>> matrix(numNodes, vector<int>());
+
+    // Проходим по всем рёбрам в графе
+    for (const auto& [key, edge] : graphG) {
+        // IDExit - это ID станции, откуда исходит ребро
+        // IDEntry - это ID станции, куда ведёт ребро
+        // Поскольку ID станций начинаются с 1, то вычитаем 1 для получения индекса массива
+        int fromIndex = edge.IDExit - 1;
+        int toIndex = edge.IDEntry - 1;
+
+        // Добавляем связь в матрицу смежности
+        matrix[fromIndex].push_back(toIndex);
+    }
+
+    return matrix;
 }
 
 void Sort(unordered_map<int, edge>& graphG, netWork& newNetWork, vector<int>& deletedCS) {
-    vector<vector<int>>matrix = createMatrix(graphG, newNetWork.getCS().size());
+    vector<vector<int>> matrix = createMatrix(graphG, newNetWork.getCS().size());
     vector<int> resOfTop;
+
     if (hasCycle(matrix, newNetWork.getCS().size())) {
-        cout << "Graph has a cicle" << endl;
+        cout << "Graph has a cycle" << endl;
     }
     else {
-        cout << "Graph does not have a cicle" << endl;
-        vector<bool>visited(newNetWork.getCS().size());
+        cout << "Graph does not have a cycle" << endl;
+        vector<bool> visited(newNetWork.getCS().size(), false);
+
         for (int node = 0; node < newNetWork.getCS().size(); node++)
             if (!visited[node])
                 topologicalSort(matrix, node, visited, resOfTop);
 
         reverse(resOfTop.begin(), resOfTop.end());
-        for (int i = 0; i < deletedCS.size(); i++) {
-            for (int j = 0; j < resOfTop.size(); j++) {
-                if (resOfTop[j] + 1 >= deletedCS[i]) resOfTop[j]++;
-            }
-        }
+
         for (int node : resOfTop) {
             cout << node + 1 << " ";
         }
         cout << endl;
     }
 }
+
 
 int main()
 {

@@ -3,12 +3,10 @@
 #include<iostream>
 
 void paddCS(unordered_map<int, CompressorStation>& stations, CompressorStation newCS) {
-    stations.insert(pair<int, CompressorStation>(CompressorStation::ID, newCS));
-    CompressorStation::ID++;
+    stations.insert(pair<int, CompressorStation>(newCS.getStationID(), newCS));
 }
 void paddPipe(unordered_map<int, PipeLine>& pipes, PipeLine& newPipe) {
-    pipes.insert(pair<int, PipeLine>(PipeLine::PipeID, newPipe));
-    PipeLine::PipeID++;
+    pipes.insert(pair<int, PipeLine>(newPipe.getPipeID(), newPipe));
 }
 
 unordered_map<int, CompressorStation> netWork::getCS()
@@ -111,6 +109,45 @@ void netWork::loadFromFile(ifstream& fin)
     
 }
 
+//void netWork::loadFromFile(ifstream& fin)
+//{
+//    string marker;
+//    int tempId;
+//    bool flagP = 0, flagCS = 0;
+//
+//    pipes.clear();
+//    stations.clear();
+//    PipeLine::PipeID = 1;
+//    CompressorStation::ID = 1;
+//
+//    if (fin.is_open()) {
+//        while (!fin.eof()) {
+//            fin >> marker;
+//            if (marker == "PIPE") {
+//                fin >> tempId; // Считывание ID трубы
+//                PipeLine newPipe;
+//                newPipe.loadPipe(fin);
+//                pipes[tempId] = newPipe; // Добавление трубы с сохраненным ID
+//                flagP = 1;
+//            }
+//            else if (marker == "CS") {
+//                fin >> tempId; // Считывание ID станции
+//                CompressorStation newCS;
+//                newCS.loadCS(fin);
+//                stations[tempId] = newCS; // Добавление станции с сохраненным ID
+//                flagCS = 1;
+//            }
+//        }
+//        if (!flagP) cout << "No pipe data found in file" << endl;
+//        if (!flagCS) cout << "No compressor station data found in file" << endl;
+//    }
+//    else {
+//        cout << "Error! The file does not exist" << endl;
+//    }
+//}
+
+
+
 
 void netWork::saveToFile(ofstream& fout)
 {
@@ -129,6 +166,7 @@ void netWork::saveToFile(ofstream& fout)
         }
     }
 }
+
 
 void netWork::deletePipe(int index)
 {

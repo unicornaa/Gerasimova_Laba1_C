@@ -3,9 +3,9 @@
 #include <fstream>
 #include "utils.h"
 
-int PipeLine::PipeID = 1;
+int PipeLine::PipeID = 0;
 
-int PipeLine::getPipeID() const
+int PipeLine::getPipeID()
 {
     return id;
 }
@@ -17,7 +17,7 @@ void PipeLine::Reset()
 
 PipeLine::PipeLine()
 {
-    id = 0;
+    this->id = PipeID++;
     namePipe = "Unknown";
     length = 0.1;
     diameter = 0;
@@ -52,7 +52,6 @@ bool checkPipeDiam(int diam) {
 
 void PipeLine::addPipe()
 {
-    id = PipeID;
     cout << "Type name pipe: ";
     cin >> ws;
     getline(cin, namePipe);
@@ -84,50 +83,25 @@ void PipeLine::printPipe()
 }
 
 void PipeLine::loadPipe(ifstream& fin) {
-
-        id = PipeID;
         fin >> ws;
         getline(fin, namePipe);
         fin >> length;
         fin >> diameter;
         fin >> InRepairs;
-    
+
 }
 
 
 void PipeLine::savePipe(ofstream& fout) {
     if (fout.is_open()) {
-        fout << "\nPIPE\n";
-        //fout << id << '\n';
-        fout << namePipe << endl;
-        fout << length << endl;
-        fout << diameter << endl;
+        fout << "\nPIPE" << '\n';
+        fout << namePipe << '\n';
+        fout << length << '\n';
+        fout << diameter << '\n';
         fout << InRepairs;
     }
 }
 
-//std::istream& operator >> (std::istream& in, PipeLine& pipe)
-//{
-//    std::cout << "Type name pipe: ";
-//    Save(in, pipe.namePipe);
-//    std::cout << "Type pipe length: ";
-//    pipe.length = CorrectInput(0.0, 2000.0);
-//    std::cout << "Type pipe diameter: ";
-//    pipe.diameter = CorrectInput(0.0, 2000.0);
-//    std::cout << "Pipe under repair? ";
-//    pipe.InRepairs = CorrectInput(0, 1);
-//    return in;
-//}
-//
-//std::ostream& operator << (std::ostream& out, const PipeLine& pipe)
-//{
-//    out << "Pipe\n" << "ID: " << pipe.id
-//        << "\tName: " << pipe.namePipe
-//        << "\tLength: " << pipe.length
-//        << "\tDiameter: " << pipe.diameter
-//        << "\tIn Repairs: " << pipe.InRepairs;
-//    return out;
-//}
 //редактирование трубы
 void PipeLine::EditPipe() {
     InRepairs = !(InRepairs);

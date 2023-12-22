@@ -3,23 +3,24 @@
 #include <fstream>
 #include "utils.h"
 
-int CompressorStation::ID = 1;
+int CompressorStation::ID = 0;
 void CompressorStation::Reset()
 {
+	
 	ID = 0;
 }
 
 
 CompressorStation::CompressorStation()
 {
-	id = 0;
+	this->id = ID++;
 	nameCompressorStation = "Unknown";
 	numberWorkshop = 1;
 	numberWorkshopJob = 0;
 	performance = 0;
 }
 
-int CompressorStation::getStationID() const
+int CompressorStation::getStationID()
 {
 	return id;
 }
@@ -60,7 +61,6 @@ bool checkNumWSinOperation(int checkValue, int numWS) {
 
 
 void CompressorStation::addCS() {
-	id = ID;
 	cout << "Type name compressor station: ";
 	cin >> ws;
 	getline(cin, nameCompressorStation);
@@ -94,17 +94,18 @@ void CompressorStation::printCS()
 }
 
 void CompressorStation::loadCS(ifstream& fin) {
-	id = ID;
-	fin >> ws;
-	getline(fin, nameCompressorStation);
-	fin >> numberWorkshop;
-	fin >> numberWorkshopJob;
-	fin >> performance;
+		fin >> ws;
+		getline(fin, nameCompressorStation);
+		fin >> numberWorkshop;
+		fin >> numberWorkshopJob;
+		fin >> performance;
+
 }
 
 void CompressorStation::saveCS(ofstream& fout) {
 	if (fout.is_open()) {
-		fout << "\nCS" << '\n';
+		fout << "\nCS" << '\n';/*
+		fout << id << '\n';*/
 		fout << nameCompressorStation << '\n';
 		fout << numberWorkshop << '\n';
 		fout << numberWorkshopJob << '\n';

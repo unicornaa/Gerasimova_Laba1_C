@@ -7,11 +7,12 @@ class CompressorStation
 	int id;
 	int numberWorkshop;
 	double performance;
+	
 public:
 	static void Reset();
 	static int ID;
 	CompressorStation();
-	int getStationID() const;
+	int getStationID();
 	int getNumberWorkshop() const;
 	std::string nameCompressorStation;
 	int numberWorkshopJob;

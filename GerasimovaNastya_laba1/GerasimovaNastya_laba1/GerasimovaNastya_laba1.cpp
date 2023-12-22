@@ -25,6 +25,7 @@ bool CheckID(const unordered_map<int, type>& x, const int& id)
 //        cout << "Pipe ID: " << id << " " << pipes.at(id) << endl;
 //    }
 //}
+
 //проверка ID
 int CorrectIntID() {
     int id;
@@ -291,13 +292,9 @@ void editPipe(netWork& newNetWork) {
     cout << "Type pipeline ID for editing: ";
     int id;
     id = CorrectIntID();
-    /*vector<int> res = findPipebyRepair(newNetWork, id);*/
-    /*if (newNetWork.getPipe().size() != 0) {
-        cout << "No pipes with this repair state.\n";
-        return;
-    }*/
     newNetWork.editPipe(id);
 }
+
 
 ///редактирование станции
 void editCS(netWork& newNetWork) {
@@ -424,24 +421,24 @@ bool checkPipeD(int diameter) {
         return 0;
     }
 }
-
-int inputValue() {
-    int state;
-    while (1) {
-        if (!(cin >> state)) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout << "Try again: ";
-        }
-        else if (state >= 1 || state == -1) {
-            cerr << state << endl;
-            return state;
-        }
-        else cout << "Enter value more than 0: ";
-    }
-    cerr << state << endl;
-    return state;
-}
+//
+//int inputValue() {
+//    int state;
+//    while (1) {
+//        if (!(cin >> state)) {
+//            cin.clear();
+//            cin.ignore(1000, '\n');
+//            cout << "Try again: ";
+//        }
+//        else if (state >= 1 || state == -1) {
+//            cerr << state << endl;
+//            return state;
+//        }
+//        else cout << "Enter value more than 0: ";
+//    }
+//    cerr << state << endl;
+//    return state;
+//}
 
 
 void SaveToFile(netWork& newNetWork, unordered_map<int, edge>& graphG) {
@@ -532,15 +529,23 @@ int SelectCS(netWork& newNetWork) {
 
 
 
+
+// Пример реализации функции inputValue()
+int inputValue() {
+    int value;
+    while (!(cin >> value) || value < -1) {
+        cout << "Invalid input. Please enter a positive number or -1: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return value;
+}
+
 void requestForParameters(int& IDEntry, int& IDExit, int& diam, netWork& newNetWork) {
     while (1) {
         cout << "Enter the CS exit ID: ";
         IDEntry = inputValue();
-        /*if (IDEntry == -1)
-        {
-            newNetWork.addCS();
-            IDEntry = newNetWork.getCS()[newNetWork.getCS().begin()->first].getStationID();
-        }*/
+        
         cout << "Enter the CS entry ID: ";
         IDExit = inputT(1);
         if (newNetWork.getCS().contains(IDEntry) && newNetWork.getCS().contains(IDExit) && IDEntry != IDExit)
@@ -592,110 +597,142 @@ void requestForParameters(int& IDEntry, int& IDExit, int& diam, netWork& newNetW
 
 
 
-// Функция для топологической сортировки
-void topologicalSortUtil(int node, vector<bool>& visited, stack<int>& stack, vector<vector<int>>& graph) {
-    visited[node] = true;
-    for (int neighbor : graph[node])
-        if (!visited[neighbor])
-            topologicalSortUtil(neighbor, visited, stack, graph);
-    stack.push(node);
-}
-
-void topologicalSort(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<int>& resOfTop) {
-    visited[node] = true;
-
-    // Обходим всех соседей узла
-    for (int neighbor : graph[node]) {
-        if (!visited[neighbor]) {
-            topologicalSort(graph, neighbor, visited, resOfTop);
-        }
+//void Sort(unordered_map<int, edge>& graphG, netWork& newNetWork, vector<int>& deletedCS) {
+//    vector<vector<int>>matrix = createMatrix(graphG, newNetWork.getCS().size());
+//    vector<int> resOfTop;
+//    if (hasCycle(matrix, newNetWork.getCS().size())) {
+//        cout << "Graph has a cicle" << endl;
+//    }
+//    else {
+//        cout << "Graph does not have a cicle" << endl;
+//        vector<bool>visited(newNetWork.getCS().size());
+//        for (int node = 0; node < newNetWork.getCS().size(); node++)
+//            if (!visited[node])
+//                topologicalSort(matrix, node, visited, resOfTop);
+//
+//        reverse(resOfTop.begin(), resOfTop.end());
+//        for (int i = 0; i < deletedCS.size(); i++) {
+//            for (int j = 0; j < resOfTop.size(); j++) {
+//                if (resOfTop[j] + 1 >= deletedCS[i]) resOfTop[j]++;
+//            }
+//        }
+//        for (int node : resOfTop) {
+//            cout << node + 1 << " ";
+//        }
+//        cout << endl;
+//    }
+//}
+vector<vector<int>> createMatrix(unordered_map<int, edge>& graphG, int numNodes) {
+    vector<vector<int>> matrix(numNodes);
+    for (auto& [key, p] : graphG) {
+        matrix[p.IDExit - 1].push_back(p.IDEntry - 1);
     }
-
-    // Добавляем узел в результат после посещения всех его соседей
-    resOfTop.push_back(node);
+    return matrix;
 }
+
+
 
 
 bool hasCycleDFS(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<bool>& recursionStack) {
     visited[node] = true;
     recursionStack[node] = true;
 
-    // Проверяем всех соседей узла
     for (int neighbor : graph[node]) {
-        if (!visited[neighbor]) {
-            if (hasCycleDFS(graph, neighbor, visited, recursionStack)) {
-                return true;
-            }
+        if (!visited[neighbor] && hasCycleDFS(graph, neighbor, visited, recursionStack)) {
+            return true;
         }
         else if (recursionStack[neighbor]) {
-            // Найден цикл
             return true;
         }
     }
-
     recursionStack[node] = false;
     return false;
 }
+
+
 
 bool hasCycle(vector<vector<int>>& graph, int numNodes) {
     vector<bool> visited(numNodes, false);
     vector<bool> recursionStack(numNodes, false);
 
-    // Проверяем каждый узел на наличие циклов
     for (int i = 0; i < numNodes; i++) {
-        if (!visited[i]) {
-            if (hasCycleDFS(graph, i, visited, recursionStack)) {
-                return true;
-            }
+        if (!visited[i] && hasCycleDFS(graph, i, visited, recursionStack)) {
+            return true;
         }
     }
-
     return false;
 }
 
-
-
-vector<vector<int>> createMatrix(unordered_map<int, edge>& graphG, int numNodes) {
-    vector<vector<int>> matrix(numNodes, vector<int>());
-
-    // Проходим по всем рёбрам в графе
-    for (const auto& [key, edge] : graphG) {
-        // IDExit - это ID станции, откуда исходит ребро
-        // IDEntry - это ID станции, куда ведёт ребро
-        // Поскольку ID станций начинаются с 1, то вычитаем 1 для получения индекса массива
-        int fromIndex = edge.IDExit - 1;
-        int toIndex = edge.IDEntry - 1;
-
-        // Добавляем связь в матрицу смежности
-        matrix[fromIndex].push_back(toIndex);
-    }
-
-    return matrix;
+void topologicalSort(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<int>& recursionStack) {
+    visited[node] = true;
+    for (int neighbor : graph[node])
+        if (!visited[neighbor])
+            topologicalSort(graph, neighbor, visited, recursionStack);
+    recursionStack.push_back(node);
 }
 
-void Sort(unordered_map<int, edge>& graphG, netWork& newNetWork, vector<int>& deletedCS) {
-    vector<vector<int>> matrix = createMatrix(graphG, newNetWork.getCS().size());
-    vector<int> resOfTop;
+// Функция для добавления ребра в граф
+void addEdgeToGraph(unordered_map<int, edge>& graphG, int IDEntry, int IDExit, PipeLine& pipe) {
+    edge newEdge;
+    newEdge.addEdge(IDEntry, IDExit, pipe);
+    graphG[edge::maxIdG] = newEdge;
+}
 
+
+
+void Sort(unordered_map<int, edge>& graphG, netWork& newNetWork, vector<int>& deletedCS) {
+    vector<vector<int>>matrix = createMatrix(graphG, newNetWork.getCS().size());
+    vector<int> resOfTop;
     if (hasCycle(matrix, newNetWork.getCS().size())) {
-        cout << "Graph has a cycle" << endl;
+        cout << "Graph has a cicle" << endl;
     }
     else {
-        cout << "Graph does not have a cycle" << endl;
-        vector<bool> visited(newNetWork.getCS().size(), false);
-
+        cout << "Graph does not have a cicle" << endl;
+        vector<bool>visited(newNetWork.getCS().size());
         for (int node = 0; node < newNetWork.getCS().size(); node++)
             if (!visited[node])
                 topologicalSort(matrix, node, visited, resOfTop);
 
         reverse(resOfTop.begin(), resOfTop.end());
-
+        for (int i = 0; i < deletedCS.size(); i++) {
+            for (int j = 0; j < resOfTop.size(); j++) {
+                if (resOfTop[j] + 1 >= deletedCS[i]) resOfTop[j]++;
+            }
+        }
         for (int node : resOfTop) {
             cout << node + 1 << " ";
         }
         cout << endl;
     }
 }
+
+
+//// Функция сортировки графа
+//void Sort(const unordered_map<int, edge>& graphG, netWork& newNetWork, const vector<int>& deletedCS, const unordered_map<int, int>& idToIndex, const unordered_map<int, int>& indexToId) {
+//    vector<vector<int>> matrix = createMatrix(graphG, newNetWork, idToIndex);
+//    vector<int> sortedNodes;
+//    vector<bool> visited(newNetWork.getCS().size(), false);
+//
+//    if (hasCycle(matrix, newNetWork.getCS().size())) {
+//        cout << "Graph has a cycle." << endl;
+//    }
+//    else {
+//        cout << "Graph does not have a cycle." << endl;
+//        for (int i = 0; i < newNetWork.getCS().size(); i++) {
+//            if (!visited[i]) {
+//                topologicalSort(i, matrix, visited, sortedNodes);
+//            }
+//        }
+//
+//        reverse(sortedNodes.begin(), sortedNodes.end());
+//
+//        // Вывод отсортированных ID станций
+//        for (int nodeIndex : sortedNodes) {
+//            cout << indexToId.at(nodeIndex) << " ";
+//        }
+//        cout << endl;
+//    }
+//}
 
 
 int main()
@@ -709,6 +746,15 @@ int main()
     vector <int> usedPipe;
     vector <int> deletedCS;
     netWork newNetWork;
+
+    /*unordered_map<int, int> idToIndex;
+    unordered_map<int, int> indexToId;
+    int index = 0;
+    for (const auto& cs : newNetWork.getCS()) {
+        idToIndex[cs.first] = index;
+        indexToId[index] = cs.first;
+        index++;
+    }*/
 
     while (1)
     {

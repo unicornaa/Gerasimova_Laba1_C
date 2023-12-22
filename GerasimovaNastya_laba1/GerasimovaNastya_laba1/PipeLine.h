@@ -6,6 +6,7 @@
 class PipeLine
 {
     int id;
+    
     double length;
     int diameter;
 public:
@@ -23,7 +24,7 @@ public:
 
     PipeLine();
     
-    int getPipeID() const;
+    int getPipeID();
     int getDiameter() const;
 
     /*friend std::istream& operator >> (std::istream& in, PipeLine& pipe);
